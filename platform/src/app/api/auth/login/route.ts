@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { queryDb } from "@/lib/db";
+import { queryDb, getDbPool } from "@/lib/db";
 import { cookies } from "next/headers";
 
 export async function POST(request: Request) {
@@ -76,10 +76,15 @@ export async function POST(request: Request) {
     });
   } catch (err: any) {
     console.error("Auth login route error:", err);
+    let targetHost = "unknown";
+    try {
+      const p = getDbPool();
+      targetHost = (p.options as any)?.host || "no-host";
+    } catch {}
     return NextResponse.json(
       {
         error: "Unable to complete login request. Please verify your credentials and try again.",
-        details: err?.message || String(err),
+        details: `${err?.message || String(err)} (target: ${targetHost})`,
       },
       { status: 500 }
     );
