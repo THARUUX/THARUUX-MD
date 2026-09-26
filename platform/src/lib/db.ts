@@ -21,13 +21,30 @@ export function getDbPool(): Pool {
       },
       max: 10,
       idleTimeoutMillis: 30000,
+      connectionTimeoutMillis: 10000,
+    });
+
+    pool.on("error", (err) => {
+      console.warn("Unexpected PG pool error:", err.message);
+      pool = null;
     });
   }
   return pool;
 }
 
 export async function queryDb<T = any>(text: string, params?: any[]): Promise<T[]> {
-  const p = getDbPool();
-  const res = await p.query(text, params);
-  return res.rows;
+  try {
+    const p = getDbPool();
+    const res = await p.query(text, params);
+    return res.rows;
+  } catch (err: any) {
+    console.warn("queryDb error, resetting pool and retrying once:", err.message);
+    if (pool) {
+      try { await pool.end(); } catch {}
+      pool = null;
+    }
+    const p = getDbPool();
+    const res = await p.query(text, params);
+    return res.rows;
+  }
 }

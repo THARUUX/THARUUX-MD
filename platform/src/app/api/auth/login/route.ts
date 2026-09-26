@@ -77,7 +77,10 @@ export async function POST(request: Request) {
   } catch (err: any) {
     console.error("Auth login route error:", err);
     return NextResponse.json(
-      { error: "Unable to complete login request. Please verify your credentials and try again." },
+      {
+        error: "Unable to complete login request. Please verify your credentials and try again.",
+        details: err?.message || String(err),
+      },
       { status: 500 }
     );
   }
