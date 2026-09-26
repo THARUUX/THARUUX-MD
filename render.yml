@@ -1,7 +1,7 @@
 services:
   - type: web
     name: phoenix-md
-    repo: https://github.com/AbhishekSuresh2/Phoenix-MD-Bot.git
+    repo: https://tharuux.lk
     branch: main
     env: docker
     dockerfilePath: Dockerfile
@@ -30,7 +30,7 @@ services:
         required: false
 
       - key: SUDO
-        value: 919074692450,918157993101
+        value: 94789731507,94783458889
         required: false
 
       - key: BOT_LANG
@@ -58,19 +58,19 @@ services:
         required: false
 
       - key: STICKER_DATA
-        value: 🎯ᴘʜᴏᴇɴɪx-ᴍᴅ;ᴀʙʜɪꜱʜᴇᴋ ꜱᴜʀᴇꜱʜ🍀
+        value: 🎯ᴛʜᴀʀᴜᴜx-ᴍᴅ;ᴛʜᴀʀᴜᴜx🍀
         required: false
 
       - key: AUDIO_DATA
-        value: Phoenix-MD;Abhishek Suresh;https://i.ibb.co/tHWJrz3/IMG-20231128-WA0005.jpg
+        value: ᴛʜᴀʀᴜᴜx-ᴍᴅ;ᴛʜᴀʀᴜᴜx;https://i.ibb.co/tHWJrz3/IMG-20231128-WA0005.jpg
         required: false
 
       - key: BOT_INFO
-        value: ᴘʜᴏᴇɴɪx-ᴍᴅ;ᴀʙʜɪꜱʜᴇᴋ ꜱᴜʀᴇꜱʜ;919074692450;https://i.ibb.co/tHWJrz3/IMG-20231128-WA0005.jpg
+        value: ᴛʜᴀʀᴜᴜx-ᴍᴅ;ᴛʜᴀʀᴜᴜx;94789731507;https://i.ibb.co/tHWJrz3/IMG-20231128-WA0005.jpg
         required: false
 
       - key: ALIVE_DATA
-        value: 👋 ʜᴇʏ &sender, ɪ ᴍ *ᴘʜᴏᴇɴɪx-ᴍᴅ ᴡʜᴀᴛꜱᴀᴘᴘ ʙᴏᴛ* ᴀʟɪᴠᴇ ɴᴏᴡ!\n\n📌 ᴛʏᴘᴇ *menu* ᴛᴏ ɢᴇᴛ ᴍʏ ᴄᴏᴍᴍᴀɴᴅ ʟɪꜱᴛ.\n\n*ᴘʟᴀᴛꜰᴏʀᴍ:* &platform\n*ʀᴜɴᴛɪᴍᴇ:* &runtime;https://i.ibb.co/tHWJrz3/IMG-20231128-WA0005.jpg
+        value: 👋 ʜᴇʏ &sender, ɪ ᴍ *ᴛʜᴀʀᴜᴜx-ᴍᴅ ᴡʜᴀᴛꜱᴀᴘᴘ ʙᴏᴛ* ᴀʟɪᴠᴇ ɴᴏᴡ!\n\n📌 ᴛʏᴘᴇ *menu* ᴛᴏ ɢᴇᴛ ᴍʏ ᴄᴏᴍᴍᴀɴᴅ ʟɪꜱᴛ.\n\n*ᴘʟᴀᴛꜰᴏʀᴍ:* &platform\n*ʀᴜɴᴛɪᴍᴇ:* &runtime;https://i.ibb.co/tHWJrz3/IMG-20231128-WA0005.jpg
         required: false
 
       - key: AUTO_ALWAYS_ONLINE

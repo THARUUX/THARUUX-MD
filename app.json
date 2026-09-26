@@ -1,9 +1,9 @@
 {
-  "name": "Phoenix-MD",
+  "name": "THARUUX-MD",
   "version": "1.0.0",
   "description": "A Simple But Advanced WhatsApp Bot",
   "logo": "https://i.imgur.com/T78fhJk.jpeg",
-  "keywords": ["whatsapp", "bot", "md", "multi-device", "Phoenix", "Phoenix-MD"],
+  "keywords": ["whatsapp", "bot", "md", "multi-device", "THARUUX", "THARUUX-MD"],
   "repository": "https://github.com/AbhishekSuresh2/Phoenix-MD-Bot",
   "stack": "container",
 
@@ -56,25 +56,25 @@
     "BOT_INFO": {
       "description": "Enter Bot Info (Format: BotName;OwnerName;Number;ImageUrl)",
       "required": false,
-      "value": "ᴘʜᴏᴇɴɪx-ᴍᴅ;ᴀʙʜɪꜱʜᴇᴋ ꜱᴜʀᴇꜱʜ;919074692450;https://i.ibb.co/tHWJrz3/IMG-20231128-WA0005.jpg"
+      "value": "ᴛʜᴀʀᴜᴜx-ᴍᴅ;ᴛʜᴀʀᴜᴜx;919074692450;https://i.ibb.co/tHWJrz3/IMG-20231128-WA0005.jpg"
     },
 
     "STICKER_DATA": {
       "description": "Enter Sticker Packname And Author (Format: Pack;Author)",
       "required": false,
-      "value": "🎯ᴘʜᴏᴇɴɪx-ᴍᴅ;ᴀʙʜɪꜱʜᴇᴋ ꜱᴜʀᴇꜱʜ🍀"
+      "value": "🎯ᴛʜᴀʀᴜᴜx-ᴍᴅ;ᴛʜᴀʀᴜᴜx🍀"
     },
 
     "AUDIO_DATA": {
       "description": "Enter Audio Metadata (Format: Title;Artist;ThumbnailUrl)",
       "required": false,
-      "value": "Phoenix-MD;Abhishek Suresh;https://i.ibb.co/tHWJrz3/IMG-20231128-WA0005.jpg"
+      "value": "THARUUX-MD;Tharuux;https://i.ibb.co/tHWJrz3/IMG-20231128-WA0005.jpg"
     },
 
     "ALIVE_DATA": {
       "description": "Enter Your Custom Alive Message And Image URL",
       "required": false,
-      "value": "👋 ʜᴇʏ &sender, ɪ ᴍ *ᴘʜᴏᴇɴɪx-ᴍᴅ ᴡʜᴀᴛꜱᴀᴘᴘ ʙᴏᴛ* ᴀʟɪᴠᴇ ɴᴏᴡ!\n\n📌 ᴛʏᴘᴇ *menu* ᴛᴏ ɢᴇᴛ ᴍʏ ᴄᴏᴍᴍᴀɴᴅ ʟɪꜱᴛ.\n\n*ᴘʟᴀᴛꜰᴏʀᴍ:* &platform\n*ʀᴜɴᴛɪᴍᴇ:* &runtime;https://i.ibb.co/tHWJrz3/IMG-20231128-WA0005.jpg"
+      "value": "👋 ʜᴇʏ &sender, ɪ ᴍ *ᴛʜᴀʀᴜᴜx-ᴍᴅ ᴡʜᴀᴛꜱᴀᴘᴘ ʙᴏᴛ* ᴀʟɪᴠᴇ ɴᴏᴡ!\n\n📌 ᴛʏᴘᴇ *menu* ᴛᴏ ɢᴇᴛ ᴍʏ ᴄᴏᴍᴍᴀɴᴅ ʟɪꜱᴛ.\n\n*ᴘʟᴀᴛꜰᴏʀᴍ:* &platform\n*ʀᴜɴᴛɪᴍᴇ:* &runtime;https://i.ibb.co/tHWJrz3/IMG-20231128-WA0005.jpg"
     },
 
     "WELCOME_MSG": {
@@ -116,7 +116,7 @@
     "AUTO_CALL_REJECT_MSG": {
       "description": "Enter Your Custom Call Reject Message",
       "required": false,
-      "value": "*ᴀᴜᴛᴏᴍᴀᴛᴇᴅ ᴄᴀʟʟ ʙʟᴏᴄᴋɪɴɢ*\n\nꜱᴏʀʀʏ ᴄᴀʟʟꜱ ᴀʀᴇ ɴᴏᴛ ᴀʟʟᴏᴡᴇᴅ\n\nᴘʟᴇᴀꜱᴇ ꜱᴇɴᴅ ᴀ ᴛᴇxᴛ ᴍᴇꜱꜱᴀɢᴇ/ᴠᴏɪᴄᴇ ᴍᴇꜱꜱᴀɢᴇ\n\n> ᴘʜᴏᴇɴɪx-ᴍᴅ ᴡʜᴀᴛꜱᴀᴘᴘ ʙᴏᴛ"
+      "value": "*ᴀᴜᴛᴏᴍᴀᴛᴇᴅ ᴄᴀʟʟ ʙʟᴏᴄᴋɪɴɢ*\n\nꜱᴏʀʀʏ ᴄᴀʟʟꜱ ᴀʀᴇ ɴᴏᴛ ᴀʟʟᴏᴡᴇᴅ\n\nᴘʟᴇᴀꜱᴇ ꜱᴇɴᴅ ᴀ ᴛᴇxᴛ ᴍᴇꜱꜱᴀɢᴇ/ᴠᴏɪᴄᴇ ᴍᴇꜱꜱᴀɢᴇ\n\n> ᴛʜᴀʀᴜᴜx-ᴍᴅ ᴡʜᴀᴛꜱᴀᴘᴘ ʙᴏᴛ"
     },
 
     "AUTO_MSG_READ": {

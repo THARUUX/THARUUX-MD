@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>THARUUX-MD | WhatsApp Bot & Session Controller</title>
+  <meta name="description" content="Official session generator and direct control center for THARUUX-MD WhatsApp Bot. Scan QR code or link with phone number.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/public/style.css">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%230064e0'><path d='M12 2C6.48 2 2 6.48 2 12c0 2.17.7 4.19 1.94 5.82L2.5 21.5l3.86-1.39C7.94 21.27 9.9 22 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm0 18c-1.85 0-3.56-.63-4.94-1.7l-.35-.27-2.43.87.87-2.39-.28-.38C3.71 15.68 3 13.91 3 12c0-4.96 4.04-9 9-9s9 4.04 9 9-4.04 9-9 9z'/></svg>">
+</head>
+<body class="theme-dark">
+  <!-- Background Glow Accents -->
+  <div class="bg-glow bg-glow-1"></div>
+  <div class="bg-glow bg-glow-2"></div>
+
+  <!-- Header / Nav -->
+  <header class="navbar" id="main-nav">
+    <div class="nav-container">
+      <div class="brand">
+        <div class="brand-icon">
+          <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <span class="brand-name">THARUUX<span class="text-primary">-MD</span></span>
+          <span class="brand-badge">v1.0.0</span>
+        </div>
+      </div>
+
+      <div class="nav-actions">
+        <div class="status-indicator-badge" id="global-status-badge">
+          <span class="status-dot disconnected"></span>
+          <span class="status-label" id="global-status-text">Checking Status...</span>
+        </div>
+        <button class="icon-btn theme-toggle" id="theme-toggle-btn" title="Toggle Dark/Light Mode" aria-label="Toggle Theme">
+          <svg class="sun-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+          <svg class="moon-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="main-wrapper">
+    <!-- Hero Header -->
+    <section class="hero-section">
+      <div class="hero-badge">
+        <span class="sparkle">✨</span> Direct WhatsApp Bot Connection
+      </div>
+      <h1 class="hero-title">Connect WhatsApp &<br><span class="gradient-text">Run THARUUX-MD Directly</span></h1>
+      <p class="hero-subtitle">
+        Scan the QR code or link using your phone number to generate an encrypted session and start using the bot immediately.
+      </p>
+    </section>
+
+    <!-- App State: Auth Required View -->
+    <section class="auth-section" id="auth-section">
+      <div class="meta-card connection-card">
+        <!-- Mode Tabs -->
+        <div class="tabs-header">
+          <button class="tab-btn active" id="tab-qr" data-tab="qr-pane">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="7" height="7"></rect>
+              <rect x="14" y="3" width="7" height="7"></rect>
+              <rect x="14" y="14" width="7" height="7"></rect>
+              <rect x="3" y="14" width="7" height="7"></rect>
+            </svg>
+            <span>Scan QR Code</span>
+          </button>
+          <button class="tab-btn" id="tab-pair" data-tab="pair-pane">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+              <line x1="12" y1="18" x2="12.01" y2="18"></line>
+            </svg>
+            <span>Link with Phone Number</span>
+          </button>
+        </div>
+
+        <!-- Tab 1: QR Code Pane -->
+        <div class="tab-pane active" id="qr-pane">
+          <div class="qr-layout">
+            <div class="qr-display-box">
+              <div class="qr-frame" id="qr-frame">
+                <!-- Initial State Placeholder -->
+                <div class="qr-placeholder" id="qr-placeholder">
+                  <div class="qr-placeholder-icon">
+                    <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.8">
+                      <rect x="3" y="3" width="7" height="7"></rect>
+                      <rect x="14" y="3" width="7" height="7"></rect>
+                      <rect x="14" y="14" width="7" height="7"></rect>
+                      <rect x="3" y="14" width="7" height="7"></rect>
+                    </svg>
+                  </div>
+                  <p>Click below to generate an instant QR Code</p>
+                </div>
+
+                <!-- Live QR Image -->
+                <img id="qr-image" class="qr-image hidden" alt="WhatsApp QR Code" />
+
+                <!-- Spinner / Loading Overlay -->
+                <div class="qr-loader hidden" id="qr-loader">
+                  <div class="meta-spinner"></div>
+                  <span id="qr-loader-text">Generating QR code...</span>
+                </div>
+
+                <!-- Laser scanning effect -->
+                <div class="qr-laser hidden" id="qr-laser"></div>
+              </div>
+
+              <!-- Progress bar for QR refresh timer -->
+              <div class="qr-timer-bar hidden" id="qr-timer-bar">
+                <div class="qr-timer-progress" id="qr-timer-progress"></div>
+              </div>
+            </div>
+
+            <div class="qr-instructions">
+              <h3 class="instructions-heading">How to link your WhatsApp:</h3>
+              <ol class="step-list">
+                <li class="step-item">
+                  <span class="step-num">1</span>
+                  <div class="step-text">
+                    <strong>Open WhatsApp</strong> on your phone.
+                  </div>
+                </li>
+                <li class="step-item">
+                  <span class="step-num">2</span>
+                  <div class="step-text">
+                    Tap <strong>Menu ⋮</strong> (Android) or <strong>Settings ⚙️</strong> (iPhone).
+                  </div>
+                </li>
+                <li class="step-item">
+                  <span class="step-num">3</span>
+                  <div class="step-text">
+                    Select <strong>Linked Devices</strong> &rarr; tap <strong>Link a Device</strong>.
+                  </div>
+                </li>
+                <li class="step-item">
+                  <span class="step-num">4</span>
+                  <div class="step-text">
+                    Point your camera at the screen to scan this QR code.
+                  </div>
+                </li>
+              </ol>
+
+              <div class="qr-actions">
+                <button class="pill-btn primary-btn" id="generate-qr-btn">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M23 4v6h-6M1 20v-6h6"></path>
+                    <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                  </svg>
+                  <span>Generate QR Code</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 2: Pairing Code Pane -->
+        <div class="tab-pane" id="pair-pane">
+          <div class="pairing-layout">
+            <div class="pairing-form-side">
+              <h3 class="instructions-heading">Camera not working? Link with Phone Number:</h3>
+              <p class="pairing-desc">
+                WhatsApp will send an 8-character pairing code notification to your phone. No camera needed!
+              </p>
+
+              <form id="pairing-form" class="pairing-form">
+                <div class="input-group">
+                  <label for="phone-input">Phone Number (with Country Code):</label>
+                  <div class="input-wrapper">
+                    <span class="input-prefix">+</span>
+                    <input
+                      type="tel"
+                      id="phone-input"
+                      placeholder="e.g. 919074692450 or 14155552671"
+                      required
+                      autocomplete="tel"
+                    />
+                  </div>
+                  <span class="input-hint">Enter digits only with country code (do not include symbols or spaces).</span>
+                </div>
+
+                <button type="submit" class="pill-btn primary-btn w-full" id="get-code-btn">
+                  <span class="btn-text">Get 8-Digit Pairing Code</span>
+                  <div class="btn-spinner hidden"></div>
+                </button>
+              </form>
+            </div>
+
+            <div class="pairing-code-side">
+              <div class="code-display-card" id="code-display-card">
+                <div class="code-badge">Your WhatsApp Pairing Code</div>
+                <div class="code-number-container">
+                  <span class="code-digits" id="display-pairing-code">---- &bull; ----</span>
+                </div>
+                <div class="code-actions">
+                  <button class="pill-btn secondary-btn" id="copy-code-btn" disabled>
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                    </svg>
+                    <span>Copy Code</span>
+                  </button>
+                </div>
+                <p class="code-step-tip">
+                  Tap the notification on your phone or go to <strong>WhatsApp &rarr; Linked Devices &rarr; Link with phone number instead</strong> and enter this code.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- App State: Connected & Dashboard View -->
+    <section class="dashboard-section hidden" id="dashboard-section">
+      <!-- Success Banner -->
+      <div class="meta-card success-banner">
+        <div class="success-icon-bubble">
+          <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+        </div>
+        <div class="success-content">
+          <h2 class="success-title">WhatsApp Session Connected!</h2>
+          <p class="success-sub">Credentials are securely stored. You can run and manage THARUUX-MD bot directly.</p>
+        </div>
+        <div class="success-actions">
+          <button class="pill-btn primary-btn pulse-glow" id="start-bot-now-btn">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+              <polygon points="5 3 19 12 5 21 5 3"></polygon>
+            </svg>
+            <span>Run THARUUX-MD Bot Now</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Dashboard Grid -->
+      <div class="dashboard-grid">
+        <!-- User Info Card -->
+        <div class="meta-card stat-card">
+          <div class="card-header-row">
+            <div class="card-icon blue-bg">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+            </div>
+            <span class="badge success-badge">Online</span>
+          </div>
+          <div class="card-body-content">
+            <div class="stat-label">Connected WhatsApp Account</div>
+            <div class="stat-value" id="connected-user-name">WhatsApp User</div>
+            <div class="stat-sub" id="connected-user-phone">+1234567890</div>
+          </div>
+        </div>
+
+        <!-- Bot Mode Card -->
+        <div class="meta-card stat-card">
+          <div class="card-header-row">
+            <div class="card-icon purple-bg">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+              </svg>
+            </div>
+            <button class="pill-btn outline-sm-btn" id="toggle-mode-btn">
+              <span>Switch Mode</span>
+            </button>
+          </div>
+          <div class="card-body-content">
+            <div class="stat-label">Access Mode</div>
+            <div class="stat-value" id="bot-mode-text">Private</div>
+            <div class="stat-sub">Only owner/sudo can trigger commands</div>
+          </div>
+        </div>
+
+        <!-- Plugins Metric Card -->
+        <div class="meta-card stat-card">
+          <div class="card-header-row">
+            <div class="card-icon green-bg">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                <polyline points="2 17 12 22 22 17"></polyline>
+                <polyline points="2 12 12 17 22 12"></polyline>
+              </svg>
+            </div>
+            <span class="badge info-badge" id="plugins-count-badge">12 Active</span>
+          </div>
+          <div class="card-body-content">
+            <div class="stat-label">Loaded Plugins & Commands</div>
+            <div class="stat-value" id="plugins-total-count">12 Plugins</div>
+            <div class="stat-sub">Downloader, Anime, AI, Media, Admin</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Session Export Card -->
+      <div class="meta-card session-card">
+        <div class="session-card-header">
+          <div class="session-title-wrap">
+            <div class="card-icon blue-bg">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"></path>
+              </svg>
+            </div>
+            <div>
+              <h3 class="session-card-title">Generated Session ID</h3>
+              <p class="session-card-subtitle">Use this string in your Heroku, Render, Koyeb, VPS, or config.env file.</p>
+            </div>
+          </div>
+          <div class="session-card-btns">
+            <button class="pill-btn secondary-btn" id="save-env-btn">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                <polyline points="7 3 7 8 15 8"></polyline>
+              </svg>
+              <span>Save to config.env</span>
+            </button>
+            <button class="pill-btn primary-btn" id="copy-session-btn">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+              </svg>
+              <span>Copy Session String</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="session-code-container">
+          <div class="session-code-text" id="session-code-display">
+            THARUUX~loading-session-data...
+          </div>
+        </div>
+      </div>
+
+      <!-- Bot Control & Quick Actions -->
+      <div class="meta-card control-panel-card">
+        <h3 class="panel-heading">Bot Controls & Management</h3>
+        <div class="actions-grid">
+          <div class="action-item">
+            <div class="action-info">
+              <h4>Restart Bot Process</h4>
+              <p>Gracefully re-initializes socket connection and refreshes plugin cache.</p>
+            </div>
+            <button class="pill-btn secondary-btn" id="restart-bot-btn">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="1 4 1 10 7 10"></polyline>
+                <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+              </svg>
+              <span>Restart</span>
+            </button>
+          </div>
+
+          <div class="action-item">
+            <div class="action-info">
+              <h4>Disconnect & Logout</h4>
+              <p>Clears stored session files so you can link a new WhatsApp account.</p>
+            </div>
+            <button class="pill-btn danger-btn" id="logout-btn">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                <polyline points="16 17 21 12 16 7"></polyline>
+                <line x1="21" y1="12" x2="9" y2="12"></line>
+              </svg>
+              <span>Disconnect</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Footer -->
+  <footer class="app-footer">
+    <div class="footer-container">
+      <span>THARUUX-MD WhatsApp Bot &bull; Open Source Project</span>
+      <span class="footer-separator">&bull;</span>
+      <span>Designed with Meta Design Guidelines</span>
+    </div>
+  </footer>
+
+  <script src="/public/app.js"></script>
+</body>
+</html>

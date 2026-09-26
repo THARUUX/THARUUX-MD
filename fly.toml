@@ -1,0 +1,33 @@
+# Fly.io configuration for THARUUX-MD WhatsApp Bot Engine
+app = "phoenix-md-bot"
+primary_region = "sin" # Singapore region (fastest for Sri Lanka/Asia)
+
+[build]
+  dockerfile = "Dockerfile"
+
+[env]
+  PORT = "3000"
+  NODE_ENV = "production"
+
+[http_service]
+  internal_port = 3000
+  force_https = true
+  auto_stop_machines = false # MUST be false so WhatsApp socket stays alive 24/7!
+  auto_start_machines = true
+  min_machines_running = 1
+
+  [http_service.concurrency]
+    type = "requests"
+    hard_limit = 250
+    soft_limit = 200
+
+# Persistent volume for WhatsApp multi-tenant sessions (creds.json per user)
+[[mounts]]
+  source = "sessions_data"
+  destination = "/app/sessions"
+  initial_size = "1gb"
+
+[[vm]]
+  memory = "512mb"
+  cpu_kind = "shared"
+  cpus = 1

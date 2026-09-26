@@ -1,4 +1,4 @@
-# Phoenix-MD
+# THARUUX-MD
 
 > [!CAUTION]
 > ### **LEGAL NOTICE & TERMS OF USE**
@@ -8,18 +8,18 @@
 
 <div align="center">
   <a href="https://git.io/typing-svg">
-    <img src="https://readme-typing-svg.demolab.com?font=Ribeye&size=45&pause=1000&color=F710B1&center=true&width=910&height=100&lines=I'M+Phoenix-MD;Multi+Device+WhatsApp+Bot;Coded+By+Abhishek+Suresh" alt="Typing SVG" />
+    <img src="https://readme-typing-svg.demolab.com?font=Ribeye&size=45&pause=1000&color=F710B1&center=true&width=910&height=100&lines=I'M+THARUUX-MD;Multi+Device+WhatsApp+Bot;Based+On+Phoenix-MD" alt="Typing SVG" />
   </a>
 </div>
   
 <p align="center">  
   <a href="https://youtube.com/channel/UCLUS9v7q4JagAqIJ3eeMM8w">
-    <img alt="Phoenix-MD-Bot" width="350" src="https://i.ibb.co/tHWJrz3/IMG-20231128-WA0005.jpg" style="border-radius: 15px; border: 2px solid #F710B1;">
+    <img alt="THARUUX-MD-Bot" width="350" src="https://i.ibb.co/tHWJrz3/IMG-20231128-WA0005.jpg" style="border-radius: 15px; border: 2px solid #F710B1;">
   </a> 
 </p>
 
 <p align="center">
-  <strong>Phoenix-MD-Bot: A powerful, feature-rich WhatsApp Multi-Device Bot.</strong>
+  <strong>THARUUX-MD-Bot: A powerful, feature-rich WhatsApp Multi-Device Bot.</strong>
 </p>
 
 ---
@@ -28,7 +28,7 @@
 
 | Step | Task | Action |
 | :--- | :--- | :--- |
-| **01** | **Fork the Repo** | <a href="https://github.com/AbhishekSuresh2/Phoenix-MD-Bot/fork"><img src="https://img.shields.io/badge/FORK_PHOENIX_MD-000000?style=for-the-badge&logo=github&logoColor=F710B1"></a> |
+| **01** | **Fork the Repo** | <a href="https://github.com/AbhishekSuresh2/Phoenix-MD-Bot/fork"><img src="https://img.shields.io/badge/FORK_THARUUX_MD-000000?style=for-the-badge&logo=github&logoColor=F710B1"></a> |
 | **02** | **Link Your Account** | <a href="https://phoenix-md-session.vercel.app/"><img src="https://img.shields.io/badge/GET_SESSION_ID-000000?style=for-the-badge&logo=render&logoColor=F710B1"></a> |
 | **03** | **External Plugins** | <a href="https://github.com/AbhishekSuresh2/External-Plugins"><img src="https://img.shields.io/badge/EXPLORE_PLUGINS-000000?style=for-the-badge&logo=googlechrome&logoColor=F710B1"></a> |
 
@@ -83,7 +83,7 @@ Need help or want to stay updated with the latest features? Join our community!
 
 | Type | Link |
 | :--- | :--- |
-| **🛠️ Updates Channel** | <a href="https://whatsapp.com/channel/0029VbCDZhIJkK75WSjZNy1Z"><img src="https://img.shields.io/badge/Phoenix--MD_Updates-000000?style=for-the-badge&logo=whatsapp&logoColor=25D366"></a> |
+| **🛠️ Updates Channel** | <a href="https://whatsapp.com/channel/0029VbCDZhIJkK75WSjZNy1Z"><img src="https://img.shields.io/badge/THARUUX--MD_Updates-000000?style=for-the-badge&logo=whatsapp&logoColor=25D366"></a> |
 | **💬 Support Group** | <a href="https://chat.whatsapp.com/BOLb0ICN3sAJ5dloRBw5VD"><img src="https://img.shields.io/badge/Get_Help_Now-000000?style=for-the-badge&logo=whatsapp&logoColor=25D366"></a> |
 | **📺 YouTube Channel** | <a href="https://youtube.com/channel/UCLUS9v7q4JagAqIJ3eeMM8w"><img src="https://img.shields.io/badge/Subscribe-000000?style=for-the-badge&logo=youtube&logoColor=FF0000"></a> |
 
@@ -92,7 +92,7 @@ Need help or want to stay updated with the latest features? Join our community!
 
 <div align="center">
 
-<img src="https://readme-typing-svg.demolab.com?font=Ribeye&size=28&pause=1000&color=F710B1&center=true&width=600&height=50&lines=Enjoyed+Phoenix-MD%3F+%E2%98%95;Buy+Abhishek+a+Chai+%E2%98%95" alt="Typing SVG" />
+<img src="https://readme-typing-svg.demolab.com?font=Ribeye&size=28&pause=1000&color=F710B1&center=true&width=600&height=50&lines=Enjoyed+THARUUX-MD%3F+%E2%98%95;Buy+Me+a+Chai+%E2%98%95" alt="Typing SVG" />
 
 <br/>
 

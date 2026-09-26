@@ -1,0 +1,10 @@
+.git
+.github
+node_modules
+platform
+sessions
+lib/session
+.env
+.env.local
+*.log
+.next
