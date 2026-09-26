@@ -14,7 +14,7 @@ import {
   Menu,
   X,
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function AdminLayout({
   children,
@@ -24,10 +24,36 @@ export default function AdminLayout({
   const pathname = usePathname();
   const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [authorized, setAuthorized] = useState(false);
+  const [checking, setChecking] = useState(true);
 
-  const handleLogout = () => {
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem("tharuux_session_user");
+      if (!stored) {
+        router.replace("/login?redirect=" + encodeURIComponent(pathname));
+        return;
+      }
+      const u = JSON.parse(stored);
+      if (u?.role !== "admin") {
+        router.replace("/login?error=admin_required");
+        return;
+      }
+      setAuthorized(true);
+    } catch {
+      router.replace("/login");
+    } finally {
+      setChecking(false);
+    }
+  }, [pathname, router]);
+
+  const handleLogout = async () => {
+    localStorage.removeItem("tharuux_session_user");
     localStorage.removeItem("tharuux_demo_user");
-    router.push("/login");
+    try {
+      await fetch("/api/auth/logout", { method: "POST" });
+    } catch {}
+    router.replace("/login");
   };
 
   const navLinks = [
@@ -62,6 +88,17 @@ export default function AdminLayout({
       active: pathname === "/admin/notifications",
     },
   ];
+
+  if (checking || !authorized) {
+    return (
+      <div className="min-h-screen bg-[#f5f5f7] dark:bg-[#000000] flex items-center justify-center p-4">
+        <div className="flex flex-col items-center gap-3">
+          <div className="w-8 h-8 border-2 border-[#AE00FF] border-t-transparent rounded-full animate-spin" />
+          <p className="text-xs text-zinc-500 font-microma uppercase tracking-wider">Verifying Admin Access...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#f5f5f7] dark:bg-[#000000] flex flex-col md:flex-row">

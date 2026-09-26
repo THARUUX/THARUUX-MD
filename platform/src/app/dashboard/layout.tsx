@@ -22,6 +22,8 @@ export default function DashboardLayout({
   const pathname = usePathname();
   const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [authorized, setAuthorized] = useState(false);
+  const [checking, setChecking] = useState(true);
   const [user, setUser] = useState({
     name: "Account",
     email: "",
@@ -29,25 +31,37 @@ export default function DashboardLayout({
   });
 
   useEffect(() => {
-    const stored =
-      localStorage.getItem("tharuux_session_user") ||
-      localStorage.getItem("tharuux_demo_user");
-    if (stored) {
-      try {
-        const parsed = JSON.parse(stored);
-        setUser({
-          name: parsed.name || "Account",
-          email: parsed.email || "",
-          plan: parsed.plan || "basic",
-        });
-      } catch (e) {}
+    const stored = localStorage.getItem("tharuux_session_user");
+    if (!stored) {
+      router.replace("/login?redirect=" + encodeURIComponent(pathname));
+      return;
     }
-  }, []);
+    try {
+      const parsed = JSON.parse(stored);
+      if (!parsed?.id) {
+        router.replace("/login");
+        return;
+      }
+      setUser({
+        name: parsed.name || "Account",
+        email: parsed.email || "",
+        plan: parsed.plan || "basic",
+      });
+      setAuthorized(true);
+    } catch (e) {
+      router.replace("/login");
+    } finally {
+      setChecking(false);
+    }
+  }, [pathname, router]);
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     localStorage.removeItem("tharuux_session_user");
     localStorage.removeItem("tharuux_demo_user");
-    router.push("/login");
+    try {
+      await fetch("/api/auth/logout", { method: "POST" });
+    } catch {}
+    router.replace("/login");
   };
 
   const navLinks = [
@@ -70,6 +84,17 @@ export default function DashboardLayout({
       active: pathname === "/dashboard/settings",
     },
   ];
+
+  if (checking || !authorized) {
+    return (
+      <div className="min-h-screen bg-[#f5f5f7] dark:bg-[#000000] flex items-center justify-center p-4">
+        <div className="flex flex-col items-center gap-3">
+          <div className="w-8 h-8 border-2 border-[#AE00FF] border-t-transparent rounded-full animate-spin" />
+          <p className="text-xs text-zinc-500 font-microma uppercase tracking-wider">Loading Dashboard...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#f5f5f7] dark:bg-[#000000] flex flex-col md:flex-row">
