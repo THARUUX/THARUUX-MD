@@ -156,10 +156,8 @@ export default function ContactForm() {
             onChange={(e) => setFormData({ ...formData, plan_interest: e.target.value })}
             className="w-full px-4 py-3 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white text-xs focus:outline-none focus:ring-2 focus:ring-[#AE00FF]/50"
           >
-            <option value="basic">Basic Plan (LKR 500 / month)</option>
-            <option value="premium">Premium Plan (LKR 1,500 / month) — Recommended</option>
-            <option value="business">Business Plan (LKR 5,000 / month)</option>
-            <option value="enterprise">Custom Enterprise Solution</option>
+            <option value="basic">Basic Plan (LKR 500 / month) — Standard Branding</option>
+            <option value="premium">Premium Plan (LKR 1,500 / month) — Full Customization</option>
           </select>
         </div>
 

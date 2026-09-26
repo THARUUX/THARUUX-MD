@@ -37,12 +37,19 @@ export async function GET(request: Request) {
         bc.*,
         bi.bot_name,
         bi.prefix,
-        bi.mode
-      FROM public.bot_configs bc
-      JOIN public.bot_instances bi ON bi.id = bc.bot_id
-      WHERE bi.user_id = $1
+        bi.mode,
+        p.plan,
+        p.role
+      FROM public.profiles p
+      LEFT JOIN public.bot_instances bi ON bi.user_id = p.id
+      LEFT JOIN public.bot_configs bc ON bc.bot_id = bi.id
+      WHERE p.id = $1
       LIMIT 1
     `, [userId]);
+
+    const userPlan = configs[0]?.plan || "basic";
+    const userRole = configs[0]?.role || "user";
+    const canEditBrandings = userRole === "admin" || userPlan === "premium";
 
     if (configs.length === 0) {
       return NextResponse.json({
@@ -70,6 +77,8 @@ export async function GET(request: Request) {
     const data = configs[0];
     return NextResponse.json({
       success: true,
+      plan: userPlan,
+      can_edit_brandings: canEditBrandings,
       config: {
         bot_name: data.bot_name || "THARUUX-MD",
         prefix: data.prefix || ".",
@@ -101,6 +110,25 @@ export async function POST(request: Request) {
 
     if (!userId) {
       return NextResponse.json({ error: "User ID is required to update bot configuration." }, { status: 400 });
+    }
+
+    // Server-side Plan Permission Check: Basic plan users cannot modify bot configurations!
+    const userProfiles = await queryDb<{ plan: string; role: string }>(
+      "SELECT plan, role FROM public.profiles WHERE id = $1 LIMIT 1",
+      [userId]
+    );
+
+    const userProfile = userProfiles[0];
+    const isRestricted = userProfile && userProfile.role !== "admin" && (userProfile.plan === "basic" || !userProfile.plan);
+
+    if (isRestricted) {
+      return NextResponse.json(
+        {
+          error: "Bot branding and configuration customization is restricted on the Basic Plan. Please upgrade to the Premium Plan to customize your bot.",
+          code: "PLAN_RESTRICTED"
+        },
+        { status: 403 }
+      );
     }
 
     // Find user's isolated bot instance

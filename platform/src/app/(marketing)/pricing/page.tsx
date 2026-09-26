@@ -10,16 +10,17 @@ const plans = [
   {
     name: "Basic",
     price: "500",
-    description: "Ideal for individual users wanting reliable automation and group utilities.",
-    badge: null,
+    description: "Affordable 24/7 automation for individual users. Runs smoothly with fixed standard THARUUX branding.",
+    badge: "Essential",
     features: [
-      "1 Dedicated Bot Instance",
-      "50+ Core Commands",
-      "Multi-Device QR & Pairing Code",
-      "Public / Private Mode Switch",
-      "Media Downloader (YouTube, TikTok, FB)",
-      "Standard Anti-Call Shield",
-      "Community & Email Support",
+      "1 Dedicated Bot Instance (24/7 Cloud)",
+      "All 110+ Advanced Commands",
+      "Media Downloader (YouTube, TikTok, FB, IG)",
+      "Multi-Device QR & Pairing Code Access",
+      "Standard Anti-Call Reject Shield",
+      "🔒 Fixed '.' Prefix (Customization Locked)",
+      "🔒 Standard THARUUX-MD System Branding",
+      "🔒 Configuration Editing Disabled",
       "99.5% Uptime Guarantee",
     ],
     cta: "Request Basic",
@@ -29,42 +30,24 @@ const plans = [
   {
     name: "Premium",
     price: "1,500",
-    description: "The most popular plan. Full automation suite, AI intelligence, and personalized branding.",
+    description: "The complete suite with full branding freedom. Customize bot names, prefixes, alive media, and audio artwork.",
     badge: "Most Popular",
     features: [
       "1 Dedicated Bot Instance (High-Priority Node)",
       "All 110+ Advanced Commands",
+      "✨ Full Bot Branding & Configuration Control",
+      "✨ Custom Bot Name & Custom Prefix",
+      "✨ Custom Alive Message & Custom Photo Banner",
+      "✨ Custom Sticker Pack Name & Author Tag",
+      "✨ Custom Audio Artwork & Title/Artist Metadata",
+      "✨ Custom Call Rejection Notice Message",
       "Auto Status Viewer & Smart Reactions",
-      "Personalized Alive Message & Audio Branding",
-      "Custom Sticker Pack Name & Author Tag",
-      "AI Chatbot & Image Generation Tools",
-      "Automated Welcome / Goodbye Messages",
       "Priority WhatsApp Direct Support",
       "99.9% Uptime Guarantee",
     ],
     cta: "Request Premium",
     planKey: "premium",
     popular: true,
-  },
-  {
-    name: "Business",
-    price: "5,000",
-    description: "For community leaders, agencies, and businesses managing high-volume groups.",
-    badge: "Maximum Power",
-    features: [
-      "Up to 3 Active Bot Instances",
-      "Unlimited Commands & High Rate Limits",
-      "Group Broadcast & Announcement Scheduler",
-      "Automated Group Shield & Anti-Spam Guard",
-      "Multi-Sudo Administrator Configuration",
-      "Dedicated High-Performance Server Slice",
-      "Custom Plugin & Feature Requests",
-      "24/7 VIP Phone & WhatsApp Support",
-      "99.99% Enterprise Uptime SLA",
-    ],
-    cta: "Request Business",
-    planKey: "business",
-    popular: false,
   },
 ];
 
@@ -104,7 +87,7 @@ export default function PricingPage() {
       </div>
 
       {/* Plan Cards */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch mb-24">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch max-w-4xl mx-auto mb-24">
         {plans.map((plan) => (
           <div
             key={plan.name}

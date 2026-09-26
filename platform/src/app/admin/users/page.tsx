@@ -23,7 +23,7 @@ interface UserRecord {
   name: string;
   email: string;
   phone: string;
-  plan: "basic" | "premium" | "business";
+  plan: "basic" | "premium";
   is_active: boolean;
   activation_end: string;
   days_remaining: number;
@@ -42,10 +42,27 @@ export default function AdminUsersPage() {
     name: "",
     email: "",
     phone: "",
-    plan: "premium" as "basic" | "premium" | "business",
+    plan: "premium" as "basic" | "premium",
     validity_days: "30",
     initial_password: "",
   });
+
+  const handleUpdatePlan = async (userId: string, newPlan: "basic" | "premium") => {
+    try {
+      const res = await fetch("/api/admin/users", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: userId, plan: newPlan }),
+      });
+      if (res.ok) {
+        setUsers((prev) =>
+          prev.map((u) => (u.id === userId ? { ...u, plan: newPlan } : u))
+        );
+      }
+    } catch (err) {
+      console.error("Failed to update user plan:", err);
+    }
+  };
 
   const [selectedUserForPassword, setSelectedUserForPassword] = useState<UserRecord | null>(null);
   const [newPasswordInput, setNewPasswordInput] = useState("");
@@ -269,9 +286,18 @@ export default function AdminUsersPage() {
                     </td>
 
                     <td className="py-4 px-6">
-                      <span className="capitalize px-2.5 py-1 rounded-full bg-[#AE00FF]/10 text-[#AE00FF] font-semibold text-[11px] font-microma uppercase">
-                        {user.plan}
-                      </span>
+                      <select
+                        value={user.plan}
+                        onChange={(e) => handleUpdatePlan(user.id, e.target.value as "basic" | "premium")}
+                        className={`px-2.5 py-1 rounded-full font-semibold text-[11px] font-microma uppercase border cursor-pointer focus:outline-none focus:ring-1 focus:ring-[#AE00FF] ${
+                          user.plan === "premium"
+                            ? "bg-[#AE00FF]/15 text-[#AE00FF] border-[#AE00FF]/30"
+                            : "bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 border-zinc-200 dark:border-zinc-700"
+                        }`}
+                      >
+                        <option value="basic">Basic (Locked)</option>
+                        <option value="premium">Premium (Custom)</option>
+                      </select>
                     </td>
 
                     <td className="py-4 px-6">
@@ -412,9 +438,8 @@ export default function AdminUsersPage() {
                     onChange={(e) => setNewUser({ ...newUser, plan: e.target.value as any })}
                     className="w-full px-4 py-2.5 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-sm focus:outline-none focus:ring-2 focus:ring-[#AE00FF]/50"
                   >
-                    <option value="basic">Basic (LKR 1,500/mo)</option>
-                    <option value="premium">Premium (LKR 2,500/mo)</option>
-                    <option value="business">Business (LKR 5,000/mo)</option>
+                    <option value="basic">Basic (LKR 500/mo) — Locked Branding</option>
+                    <option value="premium">Premium (LKR 1,500/mo) — Full Customization</option>
                   </select>
                 </div>
 

@@ -18,16 +18,15 @@ export async function GET() {
     const activeBots = profiles.filter((p) => p.is_active).length;
     const pendingRequests = requests.filter((r) => r.status === "pending").length;
 
-    // Plan pricing: basic=1500, premium=2500, business=5000
+    // Plan pricing: basic=500, premium=1500
     const planPrices: Record<string, number> = {
-      basic: 1500,
-      premium: 2500,
-      business: 5000,
+      basic: 500,
+      premium: 1500,
     };
 
     const monthlyRevenue = profiles
       .filter((p) => p.is_active)
-      .reduce((sum, p) => sum + (planPrices[p.plan] || 2500), 0);
+      .reduce((sum, p) => sum + (planPrices[p.plan] || 500), 0);
 
     return NextResponse.json({
       success: true,

@@ -39,6 +39,9 @@ export default function BotSettingsPage() {
   });
 
   const [userId, setUserId] = useState<string | null>(null);
+  const [userPlan, setUserPlan] = useState<string>("basic");
+  const [canEditBrandings, setCanEditBrandings] = useState<boolean>(true);
+
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [changingPassword, setChangingPassword] = useState(false);
@@ -51,6 +54,7 @@ export default function BotSettingsPage() {
       if (raw) {
         const u = JSON.parse(raw);
         if (u?.id) setUserId(u.id);
+        if (u?.plan) setUserPlan(u.plan);
       }
     } catch {}
   }, []);
@@ -91,6 +95,10 @@ export default function BotSettingsPage() {
         const res = await fetch(url);
         if (res.ok) {
           const data = await res.json();
+          if (data.plan) setUserPlan(data.plan);
+          if (typeof data.can_edit_brandings === "boolean") {
+            setCanEditBrandings(data.can_edit_brandings);
+          }
           if (data.config) {
             setSettings((prev) => ({ ...prev, ...data.config }));
           }
@@ -106,6 +114,11 @@ export default function BotSettingsPage() {
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!canEditBrandings) {
+      setError("Bot customization is locked on the Basic Plan. Please upgrade to the Premium Plan to customize your bot.");
+      return;
+    }
+
     setSaving(true);
     setSavedSuccess(false);
     setError(null);
@@ -152,6 +165,46 @@ export default function BotSettingsPage() {
         )}
       </div>
 
+      {/* Plan Restriction Banner for Basic Plan */}
+      {!loading && !canEditBrandings && (
+        <div className="p-6 rounded-[24px] bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent border border-amber-500/25 flex flex-col sm:flex-row sm:items-center justify-between gap-5 animate-in fade-in duration-300">
+          <div className="flex items-start gap-3.5">
+            <div className="p-2.5 rounded-2xl bg-amber-500/15 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5">
+              <Lock className="w-5 h-5" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-700 dark:text-amber-300 text-[10px] font-bold uppercase tracking-wider font-microma">
+                  Basic Plan Active
+                </span>
+                <span className="text-xs font-bold text-zinc-900 dark:text-white font-microma uppercase">
+                  Customization Locked
+                </span>
+              </div>
+              <p className="text-xs text-zinc-600 dark:text-zinc-400 mt-1.5 max-w-xl leading-relaxed">
+                Your bot runs with standard fixed system branding (<strong>THARUUX-MD</strong>) and default prefix (<code>.</code>). Upgrading to the <strong>Premium Plan</strong> unlocks custom bot branding, custom prefixes, custom sticker authoring, audio metadata, and custom broadcast messages.
+              </p>
+            </div>
+          </div>
+          <a
+            href="/contact?intent=request&plan=premium"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="px-6 py-3 rounded-full bg-gradient-to-r from-[#AE00FF] to-[#EC4899] hover:opacity-90 text-white text-xs font-bold uppercase tracking-wider font-microma text-center shrink-0 shadow-sm flex items-center justify-center gap-2 transition-transform hover:scale-[1.02]"
+          >
+            <Sparkles className="w-3.5 h-3.5" />
+            <span>Upgrade to Premium</span>
+          </a>
+        </div>
+      )}
+
+      {error && (
+        <div className="p-4 rounded-xl bg-rose-50 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-900/50 flex items-center gap-2 text-rose-600 dark:text-rose-400 text-xs font-semibold">
+          <AlertCircle className="w-4 h-4 shrink-0" />
+          <span>{error}</span>
+        </div>
+      )}
+
       <form onSubmit={handleSave} className="space-y-8">
         {/* Section 1: General Core Settings */}
         <div className="p-6 sm:p-8 rounded-[24px] bg-white dark:bg-[#121214] border border-black/5 dark:border-white/10 apple-shadow space-y-6">
@@ -167,9 +220,10 @@ export default function BotSettingsPage() {
               </label>
               <input
                 type="text"
+                disabled={!canEditBrandings}
                 value={settings.bot_name}
                 onChange={(e) => setSettings({ ...settings, bot_name: e.target.value })}
-                className="w-full px-4 py-2.5 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white text-xs focus:outline-none focus:ring-2 focus:ring-[#AE00FF]/50"
+                className="w-full px-4 py-2.5 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white text-xs focus:outline-none focus:ring-2 focus:ring-[#AE00FF]/50 disabled:opacity-60 disabled:cursor-not-allowed"
               />
             </div>
 
@@ -179,9 +233,10 @@ export default function BotSettingsPage() {
               </label>
               <input
                 type="text"
+                disabled={!canEditBrandings}
                 value={settings.prefix}
                 onChange={(e) => setSettings({ ...settings, prefix: e.target.value })}
-                className="w-full px-4 py-2.5 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white text-xs focus:outline-none focus:ring-2 focus:ring-[#AE00FF]/50 font-mono"
+                className="w-full px-4 py-2.5 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white text-xs focus:outline-none focus:ring-2 focus:ring-[#AE00FF]/50 font-mono disabled:opacity-60 disabled:cursor-not-allowed"
               />
             </div>
 
@@ -190,9 +245,10 @@ export default function BotSettingsPage() {
                 Work Mode
               </label>
               <select
+                disabled={!canEditBrandings}
                 value={settings.mode}
                 onChange={(e) => setSettings({ ...settings, mode: e.target.value })}
-                className="w-full px-4 py-2.5 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white text-xs focus:outline-none focus:ring-2 focus:ring-[#AE00FF]/50"
+                className="w-full px-4 py-2.5 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white text-xs focus:outline-none focus:ring-2 focus:ring-[#AE00FF]/50 disabled:opacity-60 disabled:cursor-not-allowed"
               >
                 <option value="public">Public (Everyone in groups)</option>
                 <option value="private">Private (Only you &amp; Sudo numbers)</option>
@@ -215,9 +271,10 @@ export default function BotSettingsPage() {
               </label>
               <input
                 type="text"
+                disabled={!canEditBrandings}
                 value={settings.sticker_pack_name}
                 onChange={(e) => setSettings({ ...settings, sticker_pack_name: e.target.value })}
-                className="w-full px-4 py-2.5 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white text-xs focus:outline-none focus:ring-2 focus:ring-[#AE00FF]/50"
+                className="w-full px-4 py-2.5 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white text-xs focus:outline-none focus:ring-2 focus:ring-[#AE00FF]/50 disabled:opacity-60 disabled:cursor-not-allowed"
               />
             </div>
 
@@ -227,9 +284,10 @@ export default function BotSettingsPage() {
               </label>
               <input
                 type="text"
+                disabled={!canEditBrandings}
                 value={settings.sticker_author}
                 onChange={(e) => setSettings({ ...settings, sticker_author: e.target.value })}
-                className="w-full px-4 py-2.5 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white text-xs focus:outline-none focus:ring-2 focus:ring-[#AE00FF]/50"
+                className="w-full px-4 py-2.5 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white text-xs focus:outline-none focus:ring-2 focus:ring-[#AE00FF]/50 disabled:opacity-60 disabled:cursor-not-allowed"
               />
             </div>
 
@@ -239,9 +297,10 @@ export default function BotSettingsPage() {
               </label>
               <input
                 type="text"
+                disabled={!canEditBrandings}
                 value={settings.audio_title}
                 onChange={(e) => setSettings({ ...settings, audio_title: e.target.value })}
-                className="w-full px-4 py-2.5 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white text-xs focus:outline-none focus:ring-2 focus:ring-[#AE00FF]/50"
+                className="w-full px-4 py-2.5 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white text-xs focus:outline-none focus:ring-2 focus:ring-[#AE00FF]/50 disabled:opacity-60 disabled:cursor-not-allowed"
               />
             </div>
 
@@ -251,9 +310,10 @@ export default function BotSettingsPage() {
               </label>
               <input
                 type="text"
+                disabled={!canEditBrandings}
                 value={settings.audio_artist}
                 onChange={(e) => setSettings({ ...settings, audio_artist: e.target.value })}
-                className="w-full px-4 py-2.5 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white text-xs focus:outline-none focus:ring-2 focus:ring-[#AE00FF]/50"
+                className="w-full px-4 py-2.5 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white text-xs focus:outline-none focus:ring-2 focus:ring-[#AE00FF]/50 disabled:opacity-60 disabled:cursor-not-allowed"
               />
             </div>
           </div>
@@ -264,9 +324,10 @@ export default function BotSettingsPage() {
             </label>
             <textarea
               rows={3}
+              disabled={!canEditBrandings}
               value={settings.alive_message}
               onChange={(e) => setSettings({ ...settings, alive_message: e.target.value })}
-              className="w-full px-4 py-2.5 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white text-xs focus:outline-none focus:ring-2 focus:ring-[#AE00FF]/50 font-mono"
+              className="w-full px-4 py-2.5 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white text-xs focus:outline-none focus:ring-2 focus:ring-[#AE00FF]/50 font-mono disabled:opacity-60 disabled:cursor-not-allowed"
             />
           </div>
         </div>
@@ -279,55 +340,59 @@ export default function BotSettingsPage() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <label className="flex items-center justify-between p-4 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 cursor-pointer hover:border-[#AE00FF]/30 transition-colors">
+            <label className={`flex items-center justify-between p-4 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 transition-colors ${!canEditBrandings ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer hover:border-[#AE00FF]/30'}`}>
               <div>
                 <span className="text-xs font-semibold text-zinc-900 dark:text-white block font-microma">Auto Status Viewer</span>
                 <span className="text-[11px] text-zinc-400">Silently view incoming stories from contacts</span>
               </div>
               <input
                 type="checkbox"
+                disabled={!canEditBrandings}
                 checked={settings.auto_status_view}
                 onChange={(e) => setSettings({ ...settings, auto_status_view: e.target.checked })}
-                className="w-4 h-4 text-[#AE00FF] rounded focus:ring-[#AE00FF]"
+                className="w-4 h-4 text-[#AE00FF] rounded focus:ring-[#AE00FF] disabled:opacity-60 disabled:cursor-not-allowed"
               />
             </label>
 
-            <label className="flex items-center justify-between p-4 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 cursor-pointer hover:border-[#AE00FF]/30 transition-colors">
+            <label className={`flex items-center justify-between p-4 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 transition-colors ${!canEditBrandings ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer hover:border-[#AE00FF]/30'}`}>
               <div>
                 <span className="text-xs font-semibold text-zinc-900 dark:text-white block font-microma">Auto Reactions</span>
                 <span className="text-[11px] text-zinc-400">React with random emojis to chat commands</span>
               </div>
               <input
                 type="checkbox"
+                disabled={!canEditBrandings}
                 checked={settings.auto_react}
                 onChange={(e) => setSettings({ ...settings, auto_react: e.target.checked })}
-                className="w-4 h-4 text-[#AE00FF] rounded focus:ring-[#AE00FF]"
+                className="w-4 h-4 text-[#AE00FF] rounded focus:ring-[#AE00FF] disabled:opacity-60 disabled:cursor-not-allowed"
               />
             </label>
 
-            <label className="flex items-center justify-between p-4 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 cursor-pointer hover:border-[#AE00FF]/30 transition-colors">
+            <label className={`flex items-center justify-between p-4 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 transition-colors ${!canEditBrandings ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer hover:border-[#AE00FF]/30'}`}>
               <div>
                 <span className="text-xs font-semibold text-zinc-900 dark:text-white block font-microma">Anti-Call Shield</span>
                 <span className="text-[11px] text-zinc-400">Reject voice/video calls automatically</span>
               </div>
               <input
                 type="checkbox"
+                disabled={!canEditBrandings}
                 checked={settings.auto_call_reject}
                 onChange={(e) => setSettings({ ...settings, auto_call_reject: e.target.checked })}
-                className="w-4 h-4 text-[#AE00FF] rounded focus:ring-[#AE00FF]"
+                className="w-4 h-4 text-[#AE00FF] rounded focus:ring-[#AE00FF] disabled:opacity-60 disabled:cursor-not-allowed"
               />
             </label>
 
-            <label className="flex items-center justify-between p-4 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 cursor-pointer hover:border-[#AE00FF]/30 transition-colors">
+            <label className={`flex items-center justify-between p-4 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 transition-colors ${!canEditBrandings ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer hover:border-[#AE00FF]/30'}`}>
               <div>
                 <span className="text-xs font-semibold text-zinc-900 dark:text-white block font-microma">Auto Read Messages</span>
                 <span className="text-[11px] text-zinc-400">Blue tick received group and PM messages</span>
               </div>
               <input
                 type="checkbox"
+                disabled={!canEditBrandings}
                 checked={settings.auto_read}
                 onChange={(e) => setSettings({ ...settings, auto_read: e.target.checked })}
-                className="w-4 h-4 text-[#AE00FF] rounded focus:ring-[#AE00FF]"
+                className="w-4 h-4 text-[#AE00FF] rounded focus:ring-[#AE00FF] disabled:opacity-60 disabled:cursor-not-allowed"
               />
             </label>
           </div>
@@ -338,34 +403,53 @@ export default function BotSettingsPage() {
             </label>
             <input
               type="text"
+              disabled={!canEditBrandings}
               placeholder="94781234567, 94771234567"
               value={settings.sudo_numbers}
               onChange={(e) => setSettings({ ...settings, sudo_numbers: e.target.value })}
-              className="w-full px-4 py-2.5 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white text-xs focus:outline-none focus:ring-2 focus:ring-[#AE00FF]/50 font-mono"
+              className="w-full px-4 py-2.5 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white text-xs focus:outline-none focus:ring-2 focus:ring-[#AE00FF]/50 font-mono disabled:opacity-60 disabled:cursor-not-allowed"
             />
             <p className="text-[11px] text-zinc-400 mt-1">Comma-separated phone numbers with country code.</p>
           </div>
         </div>
 
         {/* Save CTA */}
-        <div className="flex justify-end">
-          <button
-            type="submit"
-            disabled={saving}
-            className="px-8 py-3.5 rounded-full bg-[#AE00FF] hover:bg-[#9600DC] text-white font-semibold text-xs uppercase tracking-wider font-microma transition-all flex items-center gap-2 disabled:opacity-60"
-          >
-            {saving ? (
-              <>
-                <Loader2 className="w-4 h-4 animate-spin" />
-                <span>Applying Changes...</span>
-              </>
-            ) : (
-              <>
-                <Save className="w-4 h-4" />
-                <span>Save Bot Settings</span>
-              </>
-            )}
-          </button>
+        <div className="flex items-center justify-end gap-4">
+          {!canEditBrandings ? (
+            <div className="flex flex-col sm:flex-row items-end sm:items-center gap-3">
+              <span className="text-xs text-amber-600 dark:text-amber-400 font-semibold font-microma flex items-center gap-1.5">
+                <Lock className="w-3.5 h-3.5" />
+                Customization Locked on Basic Plan
+              </span>
+              <a
+                href="/contact?intent=request&plan=premium"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-6 py-3 rounded-full bg-gradient-to-r from-[#AE00FF] to-[#EC4899] hover:opacity-95 text-white font-semibold text-xs uppercase tracking-wider font-microma transition-all flex items-center gap-2 shadow-md hover:shadow-lg"
+              >
+                <Sparkles className="w-3.5 h-3.5" />
+                <span>Upgrade to Unlock</span>
+              </a>
+            </div>
+          ) : (
+            <button
+              type="submit"
+              disabled={saving}
+              className="px-8 py-3.5 rounded-full bg-[#AE00FF] hover:bg-[#9600DC] text-white font-semibold text-xs uppercase tracking-wider font-microma transition-all flex items-center gap-2 disabled:opacity-60"
+            >
+              {saving ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <span>Applying Changes...</span>
+                </>
+              ) : (
+                <>
+                  <Save className="w-4 h-4" />
+                  <span>Save Bot Settings</span>
+                </>
+              )}
+            </button>
+          )}
         </div>
       </form>
 

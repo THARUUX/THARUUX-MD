@@ -1,5 +1,5 @@
 export type UserRole = "user" | "admin";
-export type SubscriptionPlan = "basic" | "premium" | "business" | "enterprise";
+export type SubscriptionPlan = "basic" | "premium";
 export type ConnectionStatus = "disconnected" | "connecting" | "connected" | "qr_ready";
 export type RequestStatus = "pending" | "contacted" | "approved" | "rejected" | "resolved";
 
