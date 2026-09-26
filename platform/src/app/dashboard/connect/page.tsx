@@ -102,7 +102,10 @@ export default function ConnectWhatsAppPage() {
       if (!res.ok) {
         throw new Error(data.error || "Failed to request QR session.");
       }
-      setTimeout(fetchStatus, 1500);
+      if (data.qr) {
+        setStatus((prev: any) => ({ ...prev, currentQR: data.qr }));
+      }
+      fetchStatus();
     } catch (err: any) {
       setErrorMsg(err.message || "Failed to initiate QR session.");
     } finally {
@@ -339,9 +342,19 @@ export default function ConnectWhatsAppPage() {
               )}
 
               {status?.currentQR && (
-                <div className="mt-4 flex items-center gap-2 text-xs text-zinc-500">
-                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                  <span>Live Socket QR (Scan with WhatsApp camera)</span>
+                <div className="mt-4 flex flex-col items-center gap-2.5">
+                  <div className="flex items-center gap-2 text-xs text-zinc-500">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                    <span>Live Socket QR (Scan with WhatsApp camera)</span>
+                  </div>
+                  <button
+                    onClick={handleRequestQR}
+                    disabled={isRequestingQR}
+                    className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-xs font-medium text-zinc-700 dark:text-zinc-300 transition-colors"
+                  >
+                    <RefreshCw className={`w-3 h-3 ${isRequestingQR ? "animate-spin" : ""}`} />
+                    <span>{isRequestingQR ? "Refreshing..." : "Refresh QR Code"}</span>
+                  </button>
                 </div>
               )}
             </div>
