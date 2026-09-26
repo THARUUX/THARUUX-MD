@@ -4,10 +4,15 @@ let pool: Pool | null = null;
 
 export function getDbPool(): Pool {
   if (!pool) {
-    const connectionString =
+    let connectionString =
       process.env.DATABASE_URL ||
       process.env.SUPABASE_URI ||
       "postgresql://postgres.pjetqsuhocnrqhblgmjd:Ldx0r4QP576Www4t@aws-0-ap-south-1.pooler.supabase.com:5432/postgres";
+
+    // Auto-migrate any legacy direct host to the IPv4-compatible pooler
+    if (connectionString.includes("db.pjetqsuhocnrqhblgmjd.supabase.co")) {
+      connectionString = "postgresql://postgres.pjetqsuhocnrqhblgmjd:Ldx0r4QP576Www4t@aws-0-ap-south-1.pooler.supabase.com:5432/postgres";
+    }
 
     pool = new Pool({
       connectionString,
