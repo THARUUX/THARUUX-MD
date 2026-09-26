@@ -1,5 +1,5 @@
 # Fly.io configuration for THARUUX-MD WhatsApp Bot Engine
-app = "phoenix-md-bot"
+app = "tharuux-md-bot"
 primary_region = "sin" # Singapore region (fastest for Sri Lanka/Asia)
 
 [build]
