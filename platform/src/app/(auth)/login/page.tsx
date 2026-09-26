@@ -76,25 +76,15 @@ export default function LoginPage() {
   return (
     <div className="bg-white dark:bg-[#121214] p-8 sm:p-10 rounded-[28px] border border-black/5 dark:border-white/10 apple-shadow-lg">
       <div className="text-center mb-8">
-        <div className="flex items-center justify-center gap-2 mb-3">
-          <div className="relative w-8 h-8">
-            <Image
-              src="/images/icon.png"
-              alt="THARUUX-MD Icon"
-              fill
-              className="object-contain"
-              priority
-            />
-          </div>
-          <div className="relative h-6 w-36">
-            <Image
-              src="/images/logo-wording.png"
-              alt="THARUUX-MD"
-              fill
-              className="object-contain object-left"
-              priority
-            />
-          </div>
+        <div className="flex items-center justify-center mb-4">
+          <Image
+            src="/images/logo-with-wording.svg"
+            alt="THARUUX-MD"
+            width={180}
+            height={40}
+            className="h-9 w-auto object-contain"
+            priority
+          />
         </div>
         <h1 className="text-xl font-bold tracking-tight text-zinc-900 dark:text-white font-microma uppercase">
           Client Portal
@@ -204,13 +194,6 @@ export default function LoginPage() {
           <span>Request bot access from admin</span>
           <ArrowRight className="w-3 h-3" />
         </Link>
-      </div>
-
-      {/* Demo helper */}
-      <div className="mt-6 p-3 rounded-xl bg-zinc-100 dark:bg-zinc-800/50 text-[11px] text-zinc-500 flex flex-col gap-1 text-left">
-        <span className="font-semibold text-zinc-700 dark:text-zinc-300 font-microma">Quick Testing:</span>
-        <span>&bull; Enter <code className="text-[#AE00FF] font-mono">admin@tharuux.lk</code> for Admin Panel</span>
-        <span>&bull; Enter <code className="text-[#AE00FF] font-mono">user@tharuux.lk</code> for Client Portal</span>
       </div>
     </div>
   );

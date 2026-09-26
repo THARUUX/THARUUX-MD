@@ -148,23 +148,14 @@ export default function Footer() {
           {/* Column 5: Brand Card (No shadow on icon) */}
           <div className="col-span-2 md:col-span-4 lg:col-span-1 p-4 rounded-2xl bg-zinc-200/50 dark:bg-zinc-800/40 border border-zinc-300/40 dark:border-zinc-700/50 flex flex-col justify-between">
             <div className="space-y-3">
-              <div className="flex items-center gap-2">
-                <div className="relative w-6 h-6">
-                  <Image
-                    src="/images/icon.png"
-                    alt="THARUUX"
-                    fill
-                    className="object-contain"
-                  />
-                </div>
-                <div className="relative h-4 w-28">
-                  <Image
-                    src="/images/logo-wording.png"
-                    alt="THARUUX-MD"
-                    fill
-                    className="object-contain object-left"
-                  />
-                </div>
+              <div className="flex items-center">
+                <Image
+                  src="/images/logo-with-wording.svg"
+                  alt="THARUUX-MD"
+                  width={150}
+                  height={34}
+                  className="h-7 w-auto object-contain object-left"
+                />
               </div>
               <p className="text-[11px] text-zinc-500 leading-snug">
                 Sri Lanka's leading high-reliability WhatsApp automation engine.

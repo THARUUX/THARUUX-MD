@@ -75,13 +75,8 @@ export default function DashboardLayout({
     <div className="min-h-screen bg-[#f5f5f7] dark:bg-[#000000] flex flex-col md:flex-row">
       {/* Mobile Header */}
       <div className="md:hidden flex items-center justify-between p-4 bg-white dark:bg-[#121214] border-b border-zinc-200 dark:border-zinc-800">
-        <Link href="/dashboard" className="flex items-center gap-2">
-          <div className="relative w-7 h-7">
-            <Image src="/images/icon.png" alt="THARUUX" fill className="object-contain" />
-          </div>
-          <div className="relative h-5 w-32">
-            <Image src="/images/logo-wording.png" alt="THARUUX-MD" fill className="object-contain object-left" />
-          </div>
+        <Link href="/dashboard" className="flex items-center">
+          <Image src="/images/logo-with-wording.svg" alt="THARUUX-MD" width={150} height={34} className="h-7 w-auto object-contain" />
         </Link>
         <button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -100,13 +95,8 @@ export default function DashboardLayout({
         <div className="space-y-8">
           {/* Logo & Brand (No shadow on icon) */}
           <div className="flex items-center justify-between">
-            <Link href="/" className="flex items-center gap-2.5 group">
-              <div className="relative w-7 h-7">
-                <Image src="/images/icon.png" alt="THARUUX" fill className="object-contain" />
-              </div>
-              <div className="relative h-5 w-32">
-                <Image src="/images/logo-wording.png" alt="THARUUX-MD" fill className="object-contain object-left" />
-              </div>
+            <Link href="/" className="flex items-center group">
+              <Image src="/images/logo-with-wording.svg" alt="THARUUX-MD" width={160} height={36} className="h-8 w-auto object-contain" />
             </Link>
           </div>
 
