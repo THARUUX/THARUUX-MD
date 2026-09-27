@@ -398,6 +398,7 @@ async function THARUUX() {
             sudoList.includes(senderId) ||
             (senderId && sudoList.some((s) => typeof s === "string" && s.includes(senderId)))
           );
+          m.isOwner = isOwner;
 
           console.log(`[🍀 THARUUX-MD Bot Logs] ${new Date().toISOString()}`);
           console.log(`👤 From: ${m.pushName || "Unknown"} (${m.jid ? m.jid.replace("@s.whatsapp.net", "") : senderId})`);

@@ -389,7 +389,13 @@ pnix(
 
 // ── ANTIBADWORD ───────────────────────────────
 pnix(
-  { command: 'antibadword', alias: ['antiword', 'antiswear', 'noswear'], desc: 'Configure Anti-Badword filter. Usage: .antibadword on/off/set delete|warn|kick', type: 'group', onlyGroup: true },
+  {
+    command: 'antibadword',
+    alias: ['antibadwords', 'antiwords', 'antiword', 'antiswear', 'noswear', 'antibasword', 'antibaswords', 'badword'],
+    desc: 'Configure Anti-Badword filter. Usage: .antibadword on/off/set delete|warn|kick',
+    type: 'group',
+    onlyGroup: true
+  },
   async (m, args, client) => {
     if (!await isGroupAdmin(client, m.chat, m.sender, m)) return m.reply('❌ Admins only.');
     const parts = (args || '').trim().toLowerCase().split(/\s+/);
@@ -409,19 +415,40 @@ pnix(
       }
       groupSec.updateGroupConfig(m.chat, (c) => { c.antibadword.action = val; });
       return m.reply(`✅ *Anti-Bad Word action set to: ${val.toUpperCase()}*`);
+    } else if (sub === 'add' || sub === 'addword') {
+      const word = parts.slice(1).join(' ').trim().toLowerCase();
+      if (!word) return m.reply('❌ Provide a word to ban.\nExample: *.antibadword add spammer*');
+      groupSec.updateGroupConfig(m.chat, (c) => {
+        if (!c.antibadword.customWords) c.antibadword.customWords = [];
+        if (!c.antibadword.removedWords) c.antibadword.removedWords = [];
+        if (!c.antibadword.customWords.includes(word)) c.antibadword.customWords.push(word);
+        c.antibadword.removedWords = c.antibadword.removedWords.filter(w => w !== word);
+      });
+      return m.reply(`✅ Added *"${word}"* to the group banned words list.`);
+    } else if (sub === 'del' || sub === 'delete' || sub === 'remove' || sub === 'delword') {
+      const word = parts.slice(1).join(' ').trim().toLowerCase();
+      if (!word) return m.reply('❌ Provide a word to unban.\nExample: *.antibadword del spammer*');
+      groupSec.updateGroupConfig(m.chat, (c) => {
+        if (!c.antibadword.customWords) c.antibadword.customWords = [];
+        if (!c.antibadword.removedWords) c.antibadword.removedWords = [];
+        c.antibadword.customWords = c.antibadword.customWords.filter(w => w !== word);
+        if (!c.antibadword.removedWords.includes(word)) c.antibadword.removedWords.push(word);
+      });
+      return m.reply(`✅ Removed *"${word}"* from the group banned words list.`);
     } else {
       const cfg = groupSec.getGroupConfig(m.chat);
       return m.reply(
         `🚫 *Anti-Bad Word Configuration*\n\n` +
         `• Status: *${cfg.antibadword.enabled ? '✅ ON' : '❌ OFF'}*\n` +
         `• Action: *${cfg.antibadword.action.toUpperCase()}*\n` +
-        `• Custom Words: *${cfg.antibadword.customWords?.length || 0} words*\n\n` +
+        `• Custom Words: *${cfg.antibadword.customWords?.length || 0} words*\n` +
+        `• Removed Words: *${cfg.antibadword.removedWords?.length || 0} words*\n\n` +
         `*Commands:*\n` +
         `• *.antibadword on* — enable\n` +
         `• *.antibadword off* — disable\n` +
         `• *.antibadword set delete|warn|kick* — set action\n` +
         `• *.addword <word>* — add custom banned word\n` +
-        `• *.delword <word>* — remove custom banned word\n` +
+        `• *.delword <word>* — remove banned word permanently\n` +
         `• *.badwords* — list custom banned words`
       );
     }
@@ -437,9 +464,11 @@ pnix(
 
     groupSec.updateGroupConfig(m.chat, (c) => {
       if (!c.antibadword.customWords) c.antibadword.customWords = [];
+      if (!c.antibadword.removedWords) c.antibadword.removedWords = [];
       if (!c.antibadword.customWords.includes(word)) {
         c.antibadword.customWords.push(word);
       }
+      c.antibadword.removedWords = c.antibadword.removedWords.filter(w => w !== word);
     });
     return m.reply(`✅ Added *"${word}"* to the group banned words list.`);
   }
@@ -454,14 +483,24 @@ pnix(
 
     groupSec.updateGroupConfig(m.chat, (c) => {
       if (!c.antibadword.customWords) c.antibadword.customWords = [];
+      if (!c.antibadword.removedWords) c.antibadword.removedWords = [];
       c.antibadword.customWords = c.antibadword.customWords.filter(w => w !== word);
+      if (!c.antibadword.removedWords.includes(word)) {
+        c.antibadword.removedWords.push(word);
+      }
     });
     return m.reply(`✅ Removed *"${word}"* from the group banned words list.`);
   }
 );
 
 pnix(
-  { command: 'badwords', alias: ['badwordslist', 'banlist'], desc: 'List active custom banned words', type: 'group', onlyGroup: true },
+  {
+    command: 'badwords',
+    alias: ['badwordslist', 'banlist', 'badwordlist', 'bannedwords'],
+    desc: 'List active custom banned words',
+    type: 'group',
+    onlyGroup: true
+  },
   async (m, args, client) => {
     const cfg = groupSec.getGroupConfig(m.chat);
     const list = cfg.antibadword.customWords || [];
@@ -590,10 +629,20 @@ pnix(
 pnix({ on: 'text' }, async (m, text, client) => {
   if (!m.chat.endsWith('@g.us')) return; // groups only
 
+  const cfg = groupSec.getGroupConfig(m.chat);
+  if (!cfg) return;
+
+  // FAST PATH: If no security modules are active, exit immediately without doing any admin checks or network calls!
+  const hasActiveSecurity = Boolean(
+    cfg.antifake?.enabled ||
+    cfg.antispam?.enabled ||
+    cfg.antilink?.enabled ||
+    cfg.antibadword?.enabled
+  );
+  if (!hasActiveSecurity) return;
+
   // Group admins and bot owners are 100% exempt from security filters
   if (await isGroupAdmin(client, m.chat, m.sender, m)) return;
-
-  const cfg = groupSec.getGroupConfig(m.chat);
   const senderClean = (m.senderPn || m.sender).split('@')[0].split(':')[0];
   const targetJid = m.sender;
 
@@ -689,7 +738,7 @@ pnix({ on: 'text' }, async (m, text, client) => {
 
   // 4. Check AntiBadword
   if (cfg.antibadword?.enabled) {
-    const bad = groupSec.checkBadWord(text, cfg.antibadword.customWords);
+    const bad = groupSec.checkBadWord(text, cfg.antibadword.customWords, cfg.antibadword.removedWords);
     if (bad) {
       try {
         await client.sendMessage(m.chat, { delete: m.data?.key }).catch(() => {});

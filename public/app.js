@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let qrTimeLeft = 25;
 
   // Theme Management
-  const savedTheme = localStorage.getItem('tharuux_theme') || 'theme-dark';
+  const savedTheme = localStorage.getItem('tharuux_theme') || 'theme-light';
   document.body.className = savedTheme;
 
   themeToggleBtn.addEventListener('click', () => {
