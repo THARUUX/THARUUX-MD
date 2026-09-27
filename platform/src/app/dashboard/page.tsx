@@ -13,6 +13,9 @@ import {
   CheckCircle2,
   AlertCircle,
   ArrowRight,
+  Server,
+  Globe,
+  Cpu,
 } from "lucide-react";
 
 export default function DashboardOverviewPage() {
@@ -246,6 +249,68 @@ export default function DashboardOverviewPage() {
             {formatUptime(botData.uptime || 0)}
           </p>
           <p className="text-[11px] text-zinc-400">Total runtime</p>
+        </div>
+      </div>
+
+      {/* Cloud Infrastructure & Node Health Card */}
+      <div className="p-6 rounded-[24px] bg-white dark:bg-[#121214] border border-black/5 dark:border-white/10 apple-shadow">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-zinc-200/80 dark:border-zinc-800">
+          <div className="flex items-center gap-3">
+            <div className="p-2.5 rounded-xl bg-[#AE00FF]/10 text-[#AE00FF]">
+              <Server className="w-5 h-5" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h3 className="text-sm font-bold text-zinc-900 dark:text-white font-microma uppercase tracking-wider">
+                  Fly.io Cloud Node Status
+                </h3>
+                <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-bold font-microma bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                  Operational
+                </span>
+              </div>
+              <p className="text-xs text-zinc-500 mt-0.5">
+                Backend Gateway: <span className="font-mono text-zinc-700 dark:text-zinc-300">tharuux-md-bot.fly.dev</span>
+              </p>
+            </div>
+          </div>
+
+          <a
+            href="https://tharuux-md-bot.fly.dev/health"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 text-xs font-semibold text-zinc-700 dark:text-zinc-300 transition-colors"
+          >
+            <Globe className="w-3.5 h-3.5 text-[#AE00FF]" />
+            <span>Check Live Health</span>
+          </a>
+        </div>
+
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-4 text-xs">
+          <div className="space-y-1">
+            <span className="text-zinc-400 text-[11px]">Primary Region</span>
+            <p className="font-semibold text-zinc-800 dark:text-zinc-200 font-mono flex items-center gap-1.5">
+              <span>🇸🇬</span> Singapore (sin)
+            </p>
+          </div>
+          <div className="space-y-1">
+            <span className="text-zinc-400 text-[11px]">Gateway Protocol</span>
+            <p className="font-semibold text-zinc-800 dark:text-zinc-200 font-mono">
+              HTTP/2 + TLS 1.3
+            </p>
+          </div>
+          <div className="space-y-1">
+            <span className="text-zinc-400 text-[11px]">Database Layer</span>
+            <p className="font-semibold text-emerald-500 font-mono">
+              Supabase Pooler Active
+            </p>
+          </div>
+          <div className="space-y-1">
+            <span className="text-zinc-400 text-[11px]">Active Node Port</span>
+            <p className="font-semibold text-zinc-800 dark:text-zinc-200 font-mono">
+              Port 3000 (Internal)
+            </p>
+          </div>
         </div>
       </div>
     </div>
