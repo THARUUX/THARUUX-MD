@@ -62,6 +62,12 @@ export default function ConnectWhatsAppPage() {
     e.preventDefault();
     if (!phoneNumber || !userId) return;
 
+    if (isConnected) {
+      if (!confirm("Your bot is currently connected to WhatsApp! Generating a new pairing code will disconnect your existing session. Do you want to proceed?")) {
+        return;
+      }
+    }
+
     setIsGenerating(true);
     setErrorMsg(null);
     setPairingCode(null);
@@ -89,6 +95,13 @@ export default function ConnectWhatsAppPage() {
 
   const handleRequestQR = async () => {
     if (!userId) return;
+
+    if (isConnected) {
+      if (!confirm("Your bot is currently connected to WhatsApp! Generating a QR code will disconnect your existing session. Do you want to proceed?")) {
+        return;
+      }
+    }
+
     setIsRequestingQR(true);
     setErrorMsg(null);
 
@@ -276,21 +289,29 @@ export default function ConnectWhatsAppPage() {
               </button>
             </form>
 
-            {(pairingCode || status?.currentPairingCode) && (
+            {pairingCode && (
               <div className="p-6 rounded-2xl bg-zinc-900 text-white text-center space-y-4 animate-in fade-in zoom-in-95 duration-200 border border-purple-500/20 shadow-lg">
                 <span className="text-[11px] font-semibold tracking-wider text-[#D946EF] uppercase font-microma">
                   Your WhatsApp Pairing Code
                 </span>
                 <div className="text-3xl font-mono font-bold tracking-widest text-white py-2">
-                  {pairingCode || status?.currentPairingCode}
+                  {pairingCode}
                 </div>
-                <button
-                  onClick={handleCopyCode}
-                  className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-xs font-medium text-white transition-colors"
-                >
-                  {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
-                  <span>{copied ? "Copied to Clipboard!" : "Copy Code"}</span>
-                </button>
+                <div className="flex items-center justify-center gap-2">
+                  <button
+                    onClick={handleCopyCode}
+                    className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-xs font-medium text-white transition-colors"
+                  >
+                    {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                    <span>{copied ? "Copied to Clipboard!" : "Copy Code"}</span>
+                  </button>
+                  <button
+                    onClick={() => setPairingCode(null)}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-zinc-800 hover:bg-zinc-700 text-xs font-medium text-zinc-400 hover:text-white transition-colors"
+                  >
+                    <span>Clear</span>
+                  </button>
+                </div>
               </div>
             )}
 
