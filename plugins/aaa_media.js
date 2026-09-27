@@ -7,13 +7,29 @@
 
 const { pnix, mode } = require('../lib');
 const { font } = require('../lib/font');
+const fs = require('fs');
 const axios = require('axios');
 const playdl = require('play-dl');
 const { execFile } = require('child_process');
 const { promisify } = require('util');
 const execFileAsync = promisify(execFile);
 
-const YTDLP     = '/home/tharuux/.local/bin/yt-dlp';
+const YTDLP = (() => {
+  const candidates = [
+    '/usr/local/bin/yt-dlp',
+    '/usr/bin/yt-dlp',
+    '/home/tharuux/.local/bin/yt-dlp',
+    'yt-dlp'
+  ];
+  for (const c of candidates) {
+    if (c === 'yt-dlp') continue;
+    try {
+      if (fs.existsSync(c)) return c;
+    } catch {}
+  }
+  return 'yt-dlp';
+})();
+
 const WALLHAVEN = 'https://wallhaven.cc/api/v1';
 const SPARKY    = 'https://api-aswin-sparky.koyeb.app/api';
 
@@ -55,8 +71,11 @@ async function ytGetUrl(videoUrl, audioOnly = true) {
     ? 'bestaudio[ext=webm]/bestaudio[ext=m4a]/bestaudio/best'
     : 'bestvideo[height<=480][ext=mp4]+bestaudio/best[height<=480]/best[ext=mp4]';
   const { stdout } = await execFileAsync(YTDLP, [
-    '--quiet', '--no-warnings', '--no-playlist', '-g', '-f', format, cleanUrl
-  ], { timeout: 20000 });
+    '--quiet', '--no-warnings', '--no-playlist', '-g', '-f', format,
+    '--no-check-certificates',
+    '--extractor-args', 'youtube:player_client=ios,web,mweb',
+    cleanUrl
+  ], { timeout: 25000 });
   return stdout.trim().split('\n')[0];
 }
 

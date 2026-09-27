@@ -220,69 +220,6 @@ pnix(
   }
 );
 
-// ══════════════════════════════════════════════════════════
-//  .antispam — Enable/disable spam detection
-// ══════════════════════════════════════════════════════════
-pnix(
-  { command: 'antispam', desc: font('enable or disable antispam (5 msgs/5s = mute)'), type: 'group', fromMe: mode },
-  async (m, q) => {
-    const action = (q || '').toLowerCase();
-    if (action === 'off') {
-      antispamEnabled.delete(m.chat);
-      return m.reply(`✅ ${font('antispam disabled for this group.')}`);
-    }
-    antispamEnabled.add(m.chat);
-    await m.reply(`✅ ${font('antispam enabled.')}\n${font('users sending 5+ messages in 5 seconds will be muted.')}\n\n> ᴛʜᴀʀᴜᴜx-ᴍᴅ`);
-  }
-);
-
-// Antispam listener
-pnix(
-  { on: 'text', fromMe: false },
-  async (m) => {
-    if (!antispamEnabled.has(m.chat)) return;
-    if (!m.chat.endsWith('@g.us')) return;
-    const now = Date.now();
-    const key = `${m.chat}:${m.sender}`;
-    let tracker = spamTracker.get(key) || { msgs: [], muted: false };
-    if (tracker.muted) return;
-    tracker.msgs = tracker.msgs.filter(t => now - t < 5000); // last 5s
-    tracker.msgs.push(now);
-    spamTracker.set(key, tracker);
-    if (tracker.msgs.length >= 5) {
-      tracker.muted = true;
-      spamTracker.set(key, tracker);
-      setTimeout(() => {
-        tracker.muted = false;
-        tracker.msgs = [];
-        spamTracker.set(key, tracker);
-      }, 60000); // unmute after 1 min
-      try {
-        await m.client.groupParticipantsUpdate(m.chat, [m.sender], 'demote');
-        await m.client.sendMessage(m.chat, {
-          text: `🚫 @${m.sender.split('@')[0]} has been muted for 1 minute (spam detected).\n\n> ᴛʜᴀʀᴜᴜx-ᴍᴅ`,
-          mentions: [m.sender],
-        });
-      } catch {}
-    }
-  }
-);
-
-// ══════════════════════════════════════════════════════════
-//  .antifake — Block non-standard number formats
-// ══════════════════════════════════════════════════════════
-pnix(
-  { command: 'antifake', desc: font('enable or disable antifake number detection'), type: 'group', fromMe: mode },
-  async (m, q) => {
-    const action = (q || '').toLowerCase();
-    if (action === 'off') {
-      antifakeEnabled.delete(m.chat);
-      return m.reply(`✅ ${font('antifake disabled.')}`);
-    }
-    antifakeEnabled.add(m.chat);
-    await m.reply(`✅ ${font('antifake enabled.')}\n${font('participants with numbers shorter than 7 digits will be removed.')}\n\n> ᴛʜᴀʀᴜᴜx-ᴍᴅ`);
-  }
-);
 
 // ══════════════════════════════════════════════════════════
 //  .broadcast — Send message to all groups bot is in
