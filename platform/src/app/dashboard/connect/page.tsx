@@ -56,7 +56,10 @@ export default function ConnectWhatsAppPage() {
     }
   }, [userId]);
 
-  const isConnected = status?.hasSession && status?.connectionState === "open";
+  const isConnected =
+    Boolean(status?.hasSession && status?.connectionState === "open") ||
+    Boolean(status?.hasSession && status?.isBotRunning) ||
+    Boolean(status?.connectionState === "open");
 
   const handleGeneratePairingCode = async (e: React.FormEvent) => {
     e.preventDefault();
