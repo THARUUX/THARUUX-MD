@@ -470,7 +470,7 @@ async function THARUUX() {
                 try {
                   if (cmd.onlyGroup && !m.isGroup) {
                     await m.reply("_*ᴛʜɪꜱ ᴄᴏᴍᴍᴀɴᴅ ɪꜱ ᴏɴʟʏ ꜰᴏʀ ɢʀᴏᴜᴘꜱ!*_");
-                    return;
+                    break;
                   }
 
                   if (cmd.react) {
@@ -482,16 +482,16 @@ async function THARUUX() {
                   const matchedPrefix = msgWord === trigger ? trigger : alias;
                   const args = msgText.slice(matchedPrefix.length).trim();
                   await cmd.function(m, args, client);
-                  return;
                 } catch (cmdErr) {
                   console.error(`Command error in ${cmd.command}:`, cmdErr);
                   if (config.ERROR_MSG) {
                     await m.reply(`*Error in command ${cmd.command}:*\n\`\`\`${cmdErr.message}\`\`\``).catch(() => { });
                   }
-                  return;
                 }
+                break; // break alias loop after executing
               }
             }
+            if (commandMatched) break; // break cmd loop
           }
 
           // If no explicit command matched, trigger listeners (on: 'text', on: 'all')
