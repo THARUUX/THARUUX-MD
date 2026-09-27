@@ -8,6 +8,7 @@
 const { pnix, mode } = require('../lib');
 const { font } = require('../lib/font');
 const fs = require('fs');
+const path = require('path');
 const axios = require('axios');
 const playdl = require('play-dl');
 const { execFile } = require('child_process');
@@ -63,37 +64,93 @@ async function ytSearch(query) {
   };
 }
 
-// ─── YT helper: get CDN URL via yt-dlp -g ─────────────────
-async function ytGetUrl(videoUrl, audioOnly = true) {
+// ─── YT helper: download media to temp file & return Buffer ────────
+async function ytGetBuffer(videoUrl, audioOnly = true) {
   const urlMatch = videoUrl.match(/https?:\/\/[^\s]+/);
   const cleanUrl = urlMatch ? urlMatch[0] : videoUrl.trim();
-  const format = audioOnly
-    ? 'bestaudio[ext=webm]/bestaudio[ext=m4a]/bestaudio/best'
-    : 'bestvideo[height<=480][ext=mp4]+bestaudio/best[height<=480]/best[ext=mp4]';
-  const { stdout } = await execFileAsync(YTDLP, [
-    '--quiet', '--no-warnings', '--no-playlist', '-g', '-f', format,
-    '--no-check-certificates',
-    '--extractor-args', 'youtube:player_client=ios,web,mweb',
-    cleanUrl
-  ], { timeout: 25000 });
-  return stdout.trim().split('\n')[0];
+  const tmpBase = path.join('/tmp', `yt_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`);
+
+  const clientConfigs = [
+    'youtube:player_client=android,mweb,web',
+    'youtube:player_client=tv,android',
+    'youtube:player_client=android_embedded',
+    'youtube:player_client=ios,mweb',
+    'youtube:player_client=creator'
+  ];
+
+  let lastErr = null;
+  for (const clientArg of clientConfigs) {
+    try {
+      const args = [
+        '--quiet', '--no-warnings', '--no-playlist',
+        '--no-check-certificates',
+        '--user-agent', 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Mobile Safari/537.36',
+        '--extractor-args', clientArg,
+      ];
+      if (audioOnly) {
+        args.push('-f', 'ba/b');
+      } else {
+        args.push('-f', 'bv*[height<=480]+ba/b[height<=480]/b');
+      }
+      args.push('-o', `${tmpBase}.%(ext)s`, cleanUrl);
+
+      await execFileAsync(YTDLP, args, { timeout: 60000 });
+      const dir = path.dirname(tmpBase);
+      const baseName = path.basename(tmpBase);
+      const files = fs.readdirSync(dir).filter(f => f.startsWith(baseName));
+      if (files.length > 0) {
+        const targetPath = path.join(dir, files[0]);
+        const buf = fs.readFileSync(targetPath);
+        for (const f of files) {
+          try { fs.unlinkSync(path.join(dir, f)); } catch {}
+        }
+        if (buf && buf.length > 0) {
+          return buf;
+        }
+      }
+    } catch (e) {
+      lastErr = e;
+      const dir = path.dirname(tmpBase);
+      const baseName = path.basename(tmpBase);
+      try {
+        const files = fs.readdirSync(dir).filter(f => f.startsWith(baseName));
+        for (const f of files) fs.unlinkSync(path.join(dir, f));
+      } catch {}
+    }
+  }
+
+  // Secondary fallback: Public API endpoints
+  try {
+    const apiBuf = await fetchFromPublicApi(cleanUrl, audioOnly);
+    if (apiBuf && apiBuf.length > 0) return apiBuf;
+  } catch {}
+
+  throw new Error(lastErr?.message || 'Failed to download YouTube media');
 }
 
-// ─── YT helper: download buffer with browser headers ──────
-async function ytDownload(cdnUrl) {
-  const r = await axios.get(cdnUrl, {
-    responseType: 'arraybuffer',
-    timeout: 90000,
-    maxContentLength: 50 * 1024 * 1024, // 50MB limit
-    headers: {
-      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120.0.0.0 Safari/537.36',
-      'Accept': '*/*',
-      'Range': 'bytes=0-',
-      'Referer': 'https://www.youtube.com/',
-      'Origin': 'https://www.youtube.com',
-    },
-  });
-  return Buffer.from(r.data);
+// ─── YT helper: fallback API fetcher ─────────────────────────
+async function fetchFromPublicApi(cleanUrl, audioOnly = true) {
+  const videoIdMatch = cleanUrl.match(/(?:v=|\/)([\w-]{11})/);
+  if (!videoIdMatch) return null;
+
+  const endpoints = [
+    `https://api.darksipzz.my.id/api/downloader/yt${audioOnly ? 'mp3' : 'mp4'}?url=${encodeURIComponent(cleanUrl)}`,
+    `https://api.siputzx.my.id/api/d/yt${audioOnly ? 'mp3' : 'mp4'}?url=${encodeURIComponent(cleanUrl)}`
+  ];
+
+  for (const ep of endpoints) {
+    try {
+      const res = await axios.get(ep, { timeout: 12000 });
+      const dlUrl = res.data?.data?.download || res.data?.result?.download || res.data?.url || res.data?.dl;
+      if (dlUrl) {
+        const stream = await axios.get(dlUrl, { responseType: 'arraybuffer', timeout: 30000 });
+        if (stream.data && stream.data.length > 0) {
+          return Buffer.from(stream.data);
+        }
+      }
+    } catch {}
+  }
+  return null;
 }
 
 // ─── Safe quoted helper ────────────────────────────────────
@@ -202,8 +259,7 @@ pnix(
     await m.react('⏳');
     try {
       console.log(`[song-download] Format: ${is1 ? 'Audio' : is2 ? 'Document' : 'Voice'} | URL: ${session.url}`);
-      const cdnUrl = await ytGetUrl(session.url, true);
-      const buf = await ytDownload(cdnUrl);
+      const buf = await ytGetBuffer(session.url, true);
 
       const safeTitle = (session.title || 'song').replace(/[/\\?%*:|"<>]/g, '').slice(0, 60);
       const adReply = {
@@ -261,8 +317,7 @@ pnix(
     await m.react('⏳');
     try {
       const info = await ytSearch(q);
-      const cdnUrl = await ytGetUrl(info.url, true);
-      const buf = await ytDownload(cdnUrl);
+      const buf = await ytGetBuffer(info.url, true);
       await m.client.sendMessage(m.chat, {
         audio: buf,
         mimetype: 'audio/mp4',
@@ -298,8 +353,7 @@ pnix(
     await m.react('⏳');
     try {
       const info = await ytSearch(q);
-      const cdnUrl = await ytGetUrl(info.url, false);
-      const buf = await ytDownload(cdnUrl);
+      const buf = await ytGetBuffer(info.url, false);
       await m.client.sendMessage(m.chat, {
         video: buf,
         caption: info.title ? font(info.title) : '',
@@ -331,8 +385,7 @@ pnix(
     }
     try {
       const info = await ytSearch(searchQuery + ' audio');
-      const cdnUrl = await ytGetUrl(info.url, true);
-      const buf = await ytDownload(cdnUrl);
+      const buf = await ytGetBuffer(info.url, true);
       await m.client.sendMessage(m.chat, { audio: buf, mimetype: 'audio/mp4', ptt: false }, getQuoted(m));
       await m.reply(`🎵 ${font(info.title || searchQuery)}`);
       await m.react('✅');
