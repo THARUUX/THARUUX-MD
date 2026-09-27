@@ -14,12 +14,19 @@ export async function POST(request: Request) {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ userId }),
+      signal: AbortSignal.timeout(12000),
     });
 
     const data = await res.json();
     return NextResponse.json(data);
   } catch (err: any) {
     console.error("QR trigger error:", err);
-    return NextResponse.json({ error: err.message || "Failed to trigger QR" }, { status: 500 });
+    const isTimeout = err?.name === "TimeoutError" || err?.message?.includes("abort");
+    return NextResponse.json(
+      { error: isTimeout
+          ? "Bot server is unreachable. Please ensure your bot engine is deployed and running."
+          : (err.message || "Failed to trigger QR") },
+      { status: 503 }
+    );
   }
 }

@@ -31,17 +31,19 @@
         "pm2",
         "terumx-bot",
         "tharuux-md",
-        "AbhishekSuresh2",
+        "tharuux",
         "commonjs"
     ],
-    "author": "Abhishek Suresh",
+    "author": "Tharuux",
     "license": "Apache License 2.0",
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/AbhishekSuresh2/Phoenix-MD-Bot.git"
+        "url": "git+https://github.com/THARUUX/THARUUX-MD.git"
     },
     "dependencies": {
+        "@distube/ytdl-core": "^4.16.12",
         "@hapi/boom": "^10.0.1",
+        "@vitalets/google-translate-api": "^9.2.1",
         "@whiskeysockets/baileys": "npm:baileys@latest",
         "awesome-phonenumber": "^7.2.0",
         "axios": "^1.4.0",
@@ -56,10 +58,12 @@
         "jimp": "latest",
         "jsdom": "^25.0.1",
         "link-preview-js": "^3.0.4",
+        "node-gtts": "^2.0.2",
         "node-koyeb-api": "^1.0.7",
         "node-webpmux": "^3.2.0",
         "pg": "^8.7.3",
         "pino": "^8.6.1",
+        "play-dl": "^1.9.7",
         "pm2": "^5.1.2",
         "qrcode": "^1.5.4",
         "sequelize": "^6.21.4",
@@ -67,6 +71,7 @@
         "simple-git": "^3.20.0",
         "sqlite3": "^5.0.11",
         "uuid": "^11.0.3",
-        "wa-sticker-formatter": "^4.4.4"
+        "wa-sticker-formatter": "^4.4.4",
+        "yt-search": "^2.13.1"
     }
 }

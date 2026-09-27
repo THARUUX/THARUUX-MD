@@ -3,32 +3,34 @@ const fs = require('fs');
 
 if (fs.existsSync('config.env')) {
   require('dotenv').config({
-      path: './config.env'
+    path: './config.env'
   });
-};
+} else {
+  require('dotenv').config();
+}
 
 const toBool = (x) => (x && (x.toLowerCase() === 'true' || x.toLowerCase() === 'on')) || false;
 const DATABASE_URL = process.env.DATABASE_URL === undefined ? "./database.db" : process.env.DATABASE_URL
 
 module.exports = {
-   //__________________________________________________________________________________________________________________________________________
+  //__________________________________________________________________________________________________________________________________________
   // 🖥️ For Enabling Commands Like AUTO_MSG_READ Type true For Disabling Type false  
- // ℹ️ Removed commands like welcome,goodbye etc and other commands and features that cause whatsapp account/group ban thank you!
-//____________________________________________________________________________________________________________________________________________  
+  // ℹ️ Removed commands like welcome,goodbye etc and other commands and features that cause whatsapp account/group ban thank you!
+  //____________________________________________________________________________________________________________________________________________  
   //🤖 BOT CONFIGURATION
   SESSION_ID: process.env.SESSION_ID || '',
   STICKER_DATA: process.env.STICKER_DATA || '🎯ᴛʜᴀʀᴜᴜx-ᴍᴅ;ᴛʜᴀʀᴜᴜx🍀',
-  ALIVE_DATA: process.env.ALIVE_DATA || '👋 ʜᴇʏ &sender, ɪ ᴍ *ᴛʜᴀʀᴜᴜx-ᴍᴅ ᴡʜᴀᴛꜱᴀᴘᴘ ʙᴏᴛ* ᴀʟɪᴠᴇ ɴᴏᴡ!\n\n📌 ᴛʏᴘᴇ *menu* ᴛᴏ ɢᴇᴛ ᴍʏ ᴄᴏᴍᴍᴀɴᴅ ʟɪꜱᴛ.\n\n*ᴘʟᴀᴛꜰᴏʀᴍ:* &platform\n*ʀᴜɴᴛɪᴍᴇ:* &runtime;https://i.ibb.co/tHWJrz3/IMG-20231128-WA0005.jpg',
-  AUDIO_DATA: process.env.AUDIO_DATA || 'THARUUX-MD;Tharuux;https://i.ibb.co/tHWJrz3/IMG-20231128-WA0005.jpg',
-  BOT_INFO: process.env.BOT_INFO || 'ᴛʜᴀʀᴜᴜx-ᴍᴅ;ᴛʜᴀʀᴜᴜx;919074692450;https://i.ibb.co/tHWJrz3/IMG-20231128-WA0005.jpg', 
+  ALIVE_DATA: process.env.ALIVE_DATA || '👋 ʜᴇʏ &sender, ɪ ᴍ *ᴛʜᴀʀᴜᴜx-ᴍᴅ ᴡʜᴀᴛꜱᴀᴘᴘ ʙᴏᴛ* ᴀʟɪᴠᴇ ɴᴏᴡ! \n\n 📌 ᴛʏᴘᴇ *menu* ᴛᴏ ɢᴇᴛ ᴍʏ ᴄᴏᴍᴍᴀɴᴅ ʟɪꜱᴛ. \n\n *ᴘʟᴀᴛꜰᴏʀᴍ:* &platform \n *ʀᴜɴᴛɪᴍᴇ:* &runtime;https://md.tharuux.lk/images/logo.png',
+  AUDIO_DATA: process.env.AUDIO_DATA || 'THARUUX-MD;Tharuux;https://md.tharuux.lk/images/logo.png',
+  BOT_INFO: process.env.BOT_INFO || 'ᴛʜᴀʀᴜᴜx-ᴍᴅ;ᴛʜᴀʀᴜᴜx;94789731507;https://md.tharuux.lk/images/logo.png',
   PREFIX: process.env.PREFIX || '.', //Type false to use without prerix
   MODE: process.env.MODE || 'public', //Type public to change bot mode to public
-  SUDO: process.env.SUDO || '919074692450, 918157993101',
+  SUDO: process.env.SUDO || '94789731507, 94783458889',
   ELEVENLABS_API_KEY: process.env.ELEVENLABS_API_KEY || '',
   TIMEZONE: process.env.TIMEZONE || "Asia/Kolkata",
   BOT_LANG: process.env.BOT_LANG || 'EN',
   START_MSG: toBool(process.env.START_MSG || 'true'),
-  ERROR_MSG: toBool(process.env.ERROR_MSG || 'true'), 
+  ERROR_MSG: toBool(process.env.ERROR_MSG || 'true'),
 
   //🛜 DEPLOY/HOSTING NAME AND API KEY
   HEROKU_APP_NAME: process.env.HEROKU_APP_NAME || '',
@@ -37,7 +39,7 @@ module.exports = {
   RENDER_API: process.env.RENDER_API || '',
   KOYEB_APP_NAME: process.env.KOYEB_APP_NAME || '',
   KOYEB_API_KEY: process.env.KOYEB_API_KEY || '',
-  
+
   //AUTOMATION 🎯
   AUTO_ALWAYS_ONLINE: toBool(process.env.AUTO_ALWAYS_ONLINE || 'false'),
   AUTO_CALL_REJECT: toBool(process.env.AUTO_CALL_REJECT || 'false'),
@@ -51,9 +53,9 @@ module.exports = {
   AUTO_STATUS_REPLY: toBool(process.env.AUTO_STATUS_REPLY || 'false'),
   AUTO_STATUS_REPLY_MSG: process.env.AUTO_STATUS_REPLY_MSG || '_*Nice Status Bro 🍀*_',
   AUTO_STATUS_REACT: toBool(process.env.AUTO_STATUS_REACT || 'false'),
-  AUTO_STATUS_REACT_EMOJIS: process.env.AUTO_STATUS_REACT_EMOJIS || ['💎','🤍','🍀','💀','📈','🎯','🫶','👀','☠️'],
-//_______________#OTHER(⚠️ Warning Dont Edit Anything Here)______________________________________________________________________________________
+  AUTO_STATUS_REACT_EMOJIS: process.env.AUTO_STATUS_REACT_EMOJIS || ['💎', '🤍', '🍀', '💀', '📈', '🎯', '🫶', '👀', '☠️'],
+  //_______________#OTHER(⚠️ Warning Dont Edit Anything Here)______________________________________________________________________________________
   BASE_URL: 'https://abhi-api.vercel.app/', // Don't Change This
   BRANCH: 'main',
-  DATABASE: DATABASE_URL === "./database.db" ? new Sequelize({ dialect: "sqlite", storage: DATABASE_URL, logging: false }) : new Sequelize(DATABASE_URL, {dialect: "postgres", ssl: true, protocol: "postgres", dialectOptions: { native: true, ssl: { require: true, rejectUnauthorized: false },}, logging: false })
+  DATABASE: DATABASE_URL === "./database.db" ? new Sequelize({ dialect: "sqlite", storage: DATABASE_URL, logging: false }) : new Sequelize(DATABASE_URL, { dialect: "postgres", ssl: true, protocol: "postgres", dialectOptions: { native: true, ssl: { require: true, rejectUnauthorized: false }, }, logging: false })
 };

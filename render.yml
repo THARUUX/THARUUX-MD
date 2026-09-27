@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: phoenix-md
+    name: tharuux-md
     repo: https://tharuux.lk
     branch: main
     env: docker
@@ -62,15 +62,15 @@ services:
         required: false
 
       - key: AUDIO_DATA
-        value: ᴛʜᴀʀᴜᴜx-ᴍᴅ;ᴛʜᴀʀᴜᴜx;https://i.ibb.co/tHWJrz3/IMG-20231128-WA0005.jpg
+        value: ᴛʜᴀʀᴜᴜx-ᴍᴅ;ᴛʜᴀʀᴜᴜx;https://md.tharuux.lk/images/icon.png
         required: false
 
       - key: BOT_INFO
-        value: ᴛʜᴀʀᴜᴜx-ᴍᴅ;ᴛʜᴀʀᴜᴜx;94789731507;https://i.ibb.co/tHWJrz3/IMG-20231128-WA0005.jpg
+        value: ᴛʜᴀʀᴜᴜx-ᴍᴅ;ᴛʜᴀʀᴜᴜx;94789731507;https://md.tharuux.lk/images/icon.png
         required: false
 
       - key: ALIVE_DATA
-        value: 👋 ʜᴇʏ &sender, ɪ ᴍ *ᴛʜᴀʀᴜᴜx-ᴍᴅ ᴡʜᴀᴛꜱᴀᴘᴘ ʙᴏᴛ* ᴀʟɪᴠᴇ ɴᴏᴡ!\n\n📌 ᴛʏᴘᴇ *menu* ᴛᴏ ɢᴇᴛ ᴍʏ ᴄᴏᴍᴍᴀɴᴅ ʟɪꜱᴛ.\n\n*ᴘʟᴀᴛꜰᴏʀᴍ:* &platform\n*ʀᴜɴᴛɪᴍᴇ:* &runtime;https://i.ibb.co/tHWJrz3/IMG-20231128-WA0005.jpg
+        value: 👋 ʜᴇʏ &sender, ɪ ᴍ *ᴛʜᴀʀᴜᴜx-ᴍᴅ ᴡʜᴀᴛꜱᴀᴘᴘ ʙᴏᴛ* ᴀʟɪᴠᴇ ɴᴏᴡ!\n\n📌 ᴛʏᴘᴇ *menu* ᴛᴏ ɢᴇᴛ ᴍʏ ᴄᴏᴍᴍᴀɴᴅ ʟɪꜱᴛ.\n\n*ᴘʟᴀᴛꜰᴏʀᴍ:* &platform\n*ʀᴜɴᴛɪᴍᴇ:* &runtime;https://md.tharuux.lk/images/icon.png
         required: false
 
       - key: AUTO_ALWAYS_ONLINE
@@ -82,7 +82,7 @@ services:
         required: false
 
       - key: AUTO_CALL_REJECT_MSG
-        value: "*ᴀᴜᴛᴏᴍᴀᴛᴇᴅ ᴄᴀʟʟ ʙʟᴏᴄᴋɪɴɢ*\n\nꜱᴏʀʀʏ ᴄᴀʟʟꜱ ᴀʀᴇ ɴᴏᴛ ᴀʟʟᴏᴡᴇᴅ\n\nᴘʟᴇᴀꜱᴇ ꜱᴇɴᴅ ᴀ ᴛᴇxᴛ ᴍᴇꜱꜱᴀɢᴇ/ᴠᴏɪᴄᴇ ᴍᴇꜱꜱᴀɢᴇ\n\n> ᴘʜᴏᴇɴɪx-ᴍᴅ ᴡʜᴀᴛꜱᴀᴘᴘ ʙᴏᴛ"
+        value: "*ᴀᴜᴛᴏᴍᴀᴛᴇᴅ ᴄᴀʟʟ ʙʟᴏᴄᴋɪɴɢ*\n\nꜱᴏʀʀʏ ᴄᴀʟʟꜱ ᴀʀᴇ ɴᴏᴛ ᴀʟʟᴏᴡᴇᴅ\n\nᴘʟᴇᴀꜱᴇ ꜱᴇɴᴅ ᴀ ᴛᴇxᴛ ᴍᴇꜱꜱᴀɢᴇ/ᴠᴏɪᴄᴇ ᴍᴇꜱꜱᴀɢᴇ\n\n> ᴛʜᴀʀᴜᴜx-ᴍᴅ ᴡʜᴀᴛꜱᴀᴘᴘ ʙᴏᴛ"
         required: false
 
       - key: AUTO_MSG_READ

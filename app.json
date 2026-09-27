@@ -1,144 +1,127 @@
 {
   "name": "THARUUX-MD",
   "version": "1.0.0",
-  "description": "A Simple But Advanced WhatsApp Bot",
-  "logo": "https://i.imgur.com/T78fhJk.jpeg",
-  "keywords": ["whatsapp", "bot", "md", "multi-device", "THARUUX", "THARUUX-MD"],
-  "repository": "https://github.com/AbhishekSuresh2/Phoenix-MD-Bot",
+  "description": "A Multi-Device WhatsApp User Bot",
+  "logo": "https://md.tharuux.lk/images/logo.png",
+  "keywords": [
+    "whatsapp",
+    "bot",
+    "md",
+    "multi-device",
+    "THARUUX",
+    "THARUUX-MD"
+  ],
+  "repository": "https://tharuux.lk",
   "stack": "container",
-
   "env": {
     "SESSION_ID": {
       "description": "Enter Your Session ID Which You Received From The Pairing Code",
       "required": true
     },
-
     "PREFIX": {
       "description": "Enter Your Command Prefix (e.g., . or !)",
       "required": false,
       "value": "."
     },
-
     "MODE": {
       "description": "Enter Bot Work Mode (public or private)",
       "required": false,
       "value": "private"
     },
-    
     "HEROKU_APP_NAME": {
       "description": "Enter Your Heroku App Name Same As Above You Entered",
       "required": true
     },
-    
     "HEROKU_API_KEY": {
       "description": "Enter Your Heroku Account Api Key. Get It From https://dashboard.heroku.com/account",
       "required": true
     },
-
     "SUDO": {
-      "description": "Enter Sudo Numbers Comma Separated (e.g., 919074...,918157...)",
+      "description": "Enter Sudo Numbers Comma Separated (e.g., 9474...,9477...)",
       "required": false,
-      "value": "919074692450,918157993101"
+      "value": "94789731507,94713723889"
     },
-
     "BOT_LANG": {
       "description": "Enter Your Bot Language (e.g., EN, ML)",
       "required": false,
       "value": "EN"
     },
-
     "TIMEZONE": {
       "description": "Enter Your Timezone (e.g., Asia/Kolkata)",
       "required": false,
       "value": "Asia/Kolkata"
     },
-
     "BOT_INFO": {
       "description": "Enter Bot Info (Format: BotName;OwnerName;Number;ImageUrl)",
       "required": false,
-      "value": "ᴛʜᴀʀᴜᴜx-ᴍᴅ;ᴛʜᴀʀᴜᴜx;919074692450;https://i.ibb.co/tHWJrz3/IMG-20231128-WA0005.jpg"
+      "value": "ᴛʜᴀʀᴜᴜx-ᴍᴅ;ᴛʜᴀʀᴜᴜx;94789731507;https://md.tharuux.lk/images/logo.png"
     },
-
     "STICKER_DATA": {
       "description": "Enter Sticker Packname And Author (Format: Pack;Author)",
       "required": false,
       "value": "🎯ᴛʜᴀʀᴜᴜx-ᴍᴅ;ᴛʜᴀʀᴜᴜx🍀"
     },
-
     "AUDIO_DATA": {
       "description": "Enter Audio Metadata (Format: Title;Artist;ThumbnailUrl)",
       "required": false,
-      "value": "THARUUX-MD;Tharuux;https://i.ibb.co/tHWJrz3/IMG-20231128-WA0005.jpg"
+      "value": "THARUUX-MD;Tharuux;https://md.tharuux.lk/images/logo.png"
     },
-
     "ALIVE_DATA": {
       "description": "Enter Your Custom Alive Message And Image URL",
       "required": false,
-      "value": "👋 ʜᴇʏ &sender, ɪ ᴍ *ᴛʜᴀʀᴜᴜx-ᴍᴅ ᴡʜᴀᴛꜱᴀᴘᴘ ʙᴏᴛ* ᴀʟɪᴠᴇ ɴᴏᴡ!\n\n📌 ᴛʏᴘᴇ *menu* ᴛᴏ ɢᴇᴛ ᴍʏ ᴄᴏᴍᴍᴀɴᴅ ʟɪꜱᴛ.\n\n*ᴘʟᴀᴛꜰᴏʀᴍ:* &platform\n*ʀᴜɴᴛɪᴍᴇ:* &runtime;https://i.ibb.co/tHWJrz3/IMG-20231128-WA0005.jpg"
+      "value": "👋 ʜᴇʏ &sender, ɪ ᴍ *ᴛʜᴀʀᴜᴜx-ᴍᴅ ᴡʜᴀᴛꜱᴀᴘᴘ ʙᴏᴛ* ᴀʟɪᴠᴇ ɴᴏᴡ! \n\n 📌 ᴛʏᴘᴇ *menu* ᴛᴏ ɢᴇᴛ ᴍʏ ᴄᴏᴍᴍᴀɴᴅ ʟɪꜱᴛ. \n\n *ᴘʟᴀᴛꜰᴏʀᴍ:* &platform \n *ʀᴜɴᴛɪᴍᴇ:* &runtime;https://md.tharuux.lk/images/logo.png"
     },
-
     "WELCOME_MSG": {
       "description": "Enter Your Group Welcome Message (Use @user, @gname tags)",
       "required": false,
       "value": "👋 Hello *@user* Welcome To Our Group *@gname*\n*Total Members:* @count\n*Total Admins:* @admin\n*Group Description:*\n@gdesc @pp"
     },
-
     "GOODBYE_MSG": {
       "description": "Enter Your Group Goodbye Message (Use @user, @gname tags)",
       "required": false,
       "value": "👋 GoodBye *@user* From *@gname*\n*Total Members:* @count @pp"
     },
-
     "START_MSG": {
       "description": "Enter true To Enable Start Message Or false To Disable",
       "required": false,
       "value": "true"
     },
-
     "ERROR_MSG": {
       "description": "Enter true To Enable Error Messages Or false To Disable",
       "required": false,
       "value": "true"
     },
-
     "AUTO_ALWAYS_ONLINE": {
       "description": "Enter true To Stay Always Online Or false To Disable",
       "required": false,
       "value": "false"
     },
-
     "AUTO_CALL_REJECT": {
       "description": "Enter true To Automatically Reject Calls Or false To Disable",
       "required": false,
       "value": "false"
     },
-
     "AUTO_CALL_REJECT_MSG": {
       "description": "Enter Your Custom Call Reject Message",
       "required": false,
       "value": "*ᴀᴜᴛᴏᴍᴀᴛᴇᴅ ᴄᴀʟʟ ʙʟᴏᴄᴋɪɴɢ*\n\nꜱᴏʀʀʏ ᴄᴀʟʟꜱ ᴀʀᴇ ɴᴏᴛ ᴀʟʟᴏᴡᴇᴅ\n\nᴘʟᴇᴀꜱᴇ ꜱᴇɴᴅ ᴀ ᴛᴇxᴛ ᴍᴇꜱꜱᴀɢᴇ/ᴠᴏɪᴄᴇ ᴍᴇꜱꜱᴀɢᴇ\n\n> ᴛʜᴀʀᴜᴜx-ᴍᴅ ᴡʜᴀᴛꜱᴀᴘᴘ ʙᴏᴛ"
     },
-
     "AUTO_MSG_READ": {
       "description": "Enter true To Auto Read Received Messages Or false To Disable",
       "required": false,
       "value": "false"
     },
-
     "AUTO_MSG_REACT": {
       "description": "Enter true To Automatically React To Messages Or false To Disable",
       "required": false,
       "value": "false"
     },
-
     "AUTO_STATUS_VIEW": {
       "description": "Enter true To Auto View Contact Statuses Or false To Disable",
       "required": false,
       "value": "false"
     },
-
   },
-
   "buildpacks": [
     {
       "url": "heroku/nodejs"

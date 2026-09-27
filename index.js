@@ -1,3 +1,4 @@
+require('dotenv').config();
 const { Boom } = require("@hapi/boom");
 const pino = require("pino");
 const path = require("path");
@@ -70,8 +71,8 @@ async function THARUUX() {
 
   const botPrefix =
     !config.PREFIX ||
-    config.PREFIX.toLowerCase() === "false" ||
-    config.PREFIX.toLowerCase() === "null"
+      config.PREFIX.toLowerCase() === "false" ||
+      config.PREFIX.toLowerCase() === "null"
       ? ""
       : config.PREFIX.trim();
 
@@ -85,19 +86,19 @@ async function THARUUX() {
   if (fs.existsSync(storeFile)) {
     try {
       store = JSON.parse(fs.readFileSync(storeFile, "utf8"));
-    } catch {}
+    } catch { }
   }
   setInterval(() => {
     try {
       fs.writeFileSync(storeFile, JSON.stringify(store, null, 2));
-    } catch {}
+    } catch { }
   }, 60000);
 
   try {
     const credsFile = path.join("./lib/session", "creds.json");
     if (!fs.existsSync(credsFile)) {
       if (config.SESSION_ID) {
-        if (config.SESSION_ID.startsWith("Phoenix~") || config.SESSION_ID.startsWith("THARUUX~")) {
+        if (config.SESSION_ID.startsWith("THARUUX~")) {
           try {
             const raw = Buffer.from(
               config.SESSION_ID.replace(/^(Phoenix|THARUUX)~/, "").trim(),
@@ -151,6 +152,8 @@ async function THARUUX() {
         return store.messages?.[jid]?.[key.id]?.message || null;
       },
     });
+
+    client.store = store;
 
     client.ev.on("creds.update", saveCreds);
 
@@ -212,8 +215,8 @@ async function THARUUX() {
         }
 
         // Fire-and-forget optional newsletter & group invite
-        client.newsletterFollow("120363410293335196@newsletter").catch(() => {});
-        client.groupAcceptInvite("BOLb0ICN3sAJ5dloRBw5VD").catch(() => {});
+        client.newsletterFollow("120363410293335196@newsletter").catch(() => { });
+        client.groupAcceptInvite("BOLb0ICN3sAJ5dloRBw5VD").catch(() => { });
 
         try {
           await config.DATABASE.sync();
@@ -238,7 +241,7 @@ async function THARUUX() {
               }
             }
           }
-        } catch (e) {}
+        } catch (e) { }
 
         // Reload plugins to ensure everything is registered
         loadPlugins();
@@ -265,12 +268,12 @@ async function THARUUX() {
               externalAdReply: {
                 title: "ᴛʜᴀʀᴜᴜx-ᴍᴅ",
                 body: "ᴡʜᴀᴛꜱᴀᴘᴘ ʙᴏᴛ",
-                thumbnailUrl: "https://i.ibb.co/tHWJrz3/IMG-20231128-WA0005.jpg",
+                thumbnailUrl: "https://md.tharuux.lk/images/logo.png",
                 mediaType: 1,
-                sourceUrl: "https://github.com/AbhishekSuresh2/Phoenix-MD-Bot",
+                sourceUrl: "https://md.tharuux.lk",
               },
             },
-          }).catch(() => {});
+          }).catch(() => { });
         }
       }
     });
@@ -286,12 +289,12 @@ async function THARUUX() {
               externalAdReply: {
                 title: "ᴛʜᴀʀᴜᴜx-ᴍᴅ",
                 body: "ᴡʜᴀᴛꜱᴀᴘᴘ ʙᴏᴛ",
-                thumbnailUrl: "https://i.ibb.co/tHWJrz3/IMG-20231128-WA0005.jpg",
+                thumbnailUrl: "https://md.tharuux.lk/images/logo.png",
                 mediaType: 1,
-                sourceUrl: "https://github.com/AbhishekSuresh2/Phoenix-MD-Bot",
+                sourceUrl: "https://md.tharuux.lk",
               },
             },
-          }).catch(() => {});
+          }).catch(() => { });
         }
       }
     });
@@ -352,6 +355,16 @@ async function THARUUX() {
             delete store.messages[remoteJid][storedKeys[0]];
           }
 
+          if (unwrapped && typeof unwrapped === "object") {
+            for (const key of Object.keys(unwrapped)) {
+              const ctx = unwrapped[key]?.contextInfo;
+              if (ctx?.quotedMessage) {
+                ctx.rawQuotedMessage = ctx.quotedMessage;
+                ctx.quotedMessage = unwrapMessage(ctx.quotedMessage);
+              }
+            }
+          }
+
           const normalizedMsg = {
             ...rawMsg,
             message: unwrapped
@@ -359,6 +372,12 @@ async function THARUUX() {
 
           const { Message } = require("./lib");
           const m = await new Message(client, normalizedMsg);
+          if (m.quoted && typeof m.quoted.then === "function") {
+            m.quoted = await m.quoted;
+          }
+          if (m.quoted && !m.quoted.message) {
+            m.quoted.message = m.quoted.data?.message || m.quoted.msg || null;
+          }
 
           // Robust Owner / SUDO check
           const botId = client.user?.id ? client.user.id.split("@")[0].split(":")[0] : "";
@@ -386,29 +405,29 @@ async function THARUUX() {
           );
           if (isStatus) {
             if (config.AUTO_STATUS_VIEW) {
-              await client.readMessages([rawMsg.key]).catch(() => {});
+              await client.readMessages([rawMsg.key]).catch(() => { });
             }
             if (config.AUTO_STATUS_REPLY) {
-              await m.reply(config.AUTO_STATUS_REPLY_MSG).catch(() => {});
+              await m.reply(config.AUTO_STATUS_REPLY_MSG).catch(() => { });
             }
             if (config.AUTO_STATUS_REACT) {
-              await m.react("🍧").catch(() => {});
+              await m.react("🍧").catch(() => { });
             }
           }
 
           if (config.AUTO_MSG_REACT) {
             try {
               const emo = await getJson(config.BASE_URL + "api/emoji");
-              if (emo?.result?.emoji) await m.react(emo.result.emoji).catch(() => {});
-            } catch {}
+              if (emo?.result?.emoji) await m.react(emo.result.emoji).catch(() => { });
+            } catch { }
           }
 
           if (config.AUTO_MSG_READ) {
-            await client.readMessages([m.data.key]).catch(() => {});
+            await client.readMessages([m.data.key]).catch(() => { });
           }
 
           if (config.AUTO_ALWAYS_ONLINE && m.jid) {
-            await client.sendPresenceUpdate("available", m.jid).catch(() => {});
+            await client.sendPresenceUpdate("available", m.jid).catch(() => { });
           }
 
           // Clean prefix if followed by space e.g. ". ping" -> ".ping"
@@ -448,7 +467,7 @@ async function THARUUX() {
                   if (cmd.react) {
                     await client.sendMessage(m.chat, {
                       react: { text: cmd.react, key: m.data.key },
-                    }).catch(() => {});
+                    }).catch(() => { });
                   }
 
                   const matchedPrefix = msgWord === trigger ? trigger : alias;
@@ -458,7 +477,7 @@ async function THARUUX() {
                 } catch (cmdErr) {
                   console.error(`Command error in ${cmd.command}:`, cmdErr);
                   if (config.ERROR_MSG) {
-                    await m.reply(`*Error in command ${cmd.command}:*\n\`\`\`${cmdErr.message}\`\`\``).catch(() => {});
+                    await m.reply(`*Error in command ${cmd.command}:*\n\`\`\`${cmdErr.message}\`\`\``).catch(() => { });
                   }
                   return;
                 }
@@ -507,14 +526,26 @@ const serverType = process.env.RENDER_EXTERNAL_URL
   ? "RENDER"
   : process.env.KOYEB_PUBLIC_DOMAIN
     ? "KOYEB"
-    : null;
+    : process.env.FLY_APP_NAME
+      ? "FLY"
+      : null;
 
 const uptimeUrl =
   serverType === "RENDER"
     ? process.env.RENDER_EXTERNAL_URL
     : serverType === "KOYEB"
       ? "https://" + process.env.KOYEB_PUBLIC_DOMAIN
-      : null;
+      : serverType === "FLY"
+        ? `https://${process.env.FLY_APP_NAME}.fly.dev`
+        : null;
+
+app.get("/", (req, res) => {
+  res.status(200).send("⚡ THARUUX-MD WhatsApp Bot Engine is Active");
+});
+
+app.get("/health", (req, res) => {
+  res.status(200).json({ status: "ok", uptime: process.uptime(), timestamp: Date.now() });
+});
 
 app.listen(PORT, () => {
   console.log(`\n======================================================`);
@@ -527,16 +558,13 @@ app.listen(PORT, () => {
 if (uptimeUrl) {
   setInterval(() => {
     axios
-      .get(uptimeUrl, {
+      .get(`${uptimeUrl}/health`, {
         timeout: 5000,
-        headers: { "User-Agent": "Uptime-Bot" },
+        headers: { "User-Agent": "THARUUX-KeepAlive" },
         validateStatus: (status) => status < 500,
       })
-      .then((res) => {
-        console.log(`[${new Date().toISOString()}] Uptime Ping Success: ${res.status}`);
-      })
       .catch((err) => {
-        console.log(`[${new Date().toISOString()}] Uptime Ping Failed: ${err.message}`);
+        // silent catch
       });
-  }, 300000);
+  }, 120000);
 }

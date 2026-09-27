@@ -4,11 +4,44 @@ import { getBotServerUrl } from "@/lib/botServer";
 
 export const dynamic = "force-dynamic";
 
+// --- Circuit Breaker ---
+// Tracks bot server health in-process memory.
+// After BOT_FAIL_THRESHOLD consecutive failures, skip live check for BOT_COOLDOWN_MS ms.
+const BOT_FAIL_THRESHOLD = 3;
+const BOT_COOLDOWN_MS = 30_000; // 30 seconds cooldown before retrying
+
+let botFailCount = 0;
+let botCircuitOpenAt: number | null = null;
+
+function isBotCircuitOpen(): boolean {
+  if (botCircuitOpenAt === null) return false;
+  if (Date.now() - botCircuitOpenAt > BOT_COOLDOWN_MS) {
+    // Cooldown expired — allow one probe attempt (half-open)
+    botCircuitOpenAt = null;
+    botFailCount = 0;
+    return false;
+  }
+  return true;
+}
+
+function recordBotSuccess() {
+  botFailCount = 0;
+  botCircuitOpenAt = null;
+}
+
+function recordBotFailure() {
+  botFailCount++;
+  if (botFailCount >= BOT_FAIL_THRESHOLD && botCircuitOpenAt === null) {
+    botCircuitOpenAt = Date.now();
+    console.warn(`[BotStatus] Circuit OPEN after ${botFailCount} failures. Skipping live check for ${BOT_COOLDOWN_MS / 1000}s.`);
+  }
+}
+// ----------------------
+
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const userId = searchParams.get("userId");
 
-  // If no userId provided, cannot return user-specific bot details
   if (!userId) {
     return NextResponse.json({
       success: true,
@@ -27,41 +60,46 @@ export async function GET(request: Request) {
   }
 
   try {
-    // 1. Check live bot engine on Fly.io / local server SPECIFICALLY for this userId
-    try {
-      const botServer = getBotServerUrl();
-      const liveRes = await fetch(
-        `${botServer}/api/status?userId=${encodeURIComponent(userId)}`,
-        { cache: "no-store", signal: AbortSignal.timeout(2000) }
-      );
+    // 1. Check live bot engine — skip entirely if circuit is open
+    if (!isBotCircuitOpen()) {
+      try {
+        const botServer = getBotServerUrl();
+        const liveRes = await fetch(
+          `${botServer}/api/status?userId=${encodeURIComponent(userId)}`,
+          { cache: "no-store", signal: AbortSignal.timeout(1500) }
+        );
 
-      if (liveRes.ok) {
-        const liveData = await liveRes.json();
-        // ONLY accept live data if it explicitly matches this user or has user-specific session
-        if (liveData.userId === userId || liveData.source === "user_bot") {
-          return NextResponse.json({
-            success: true,
-            source: "live_user_bot",
-            hasSession: !!liveData.hasSession,
-            connectionState: liveData.connectionState || "disconnected",
-            isBotRunning: !!liveData.isBotRunning,
-            user: liveData.user || null,
-            currentQR: liveData.currentQR || null,
-            currentPairingCode: liveData.currentPairingCode || null,
-            botMode: liveData.botMode || "public",
-            commandsCount: liveData.commandsCount || 110,
-            pluginsCount: liveData.pluginsCount || 12,
-            plugins: liveData.plugins || [],
-            prefix: liveData.prefix || ".",
-            uptime: liveData.uptime || 0,
-          });
+        if (liveRes.ok) {
+          const liveData = await liveRes.json();
+          if (liveData.userId === userId || liveData.source === "user_bot") {
+            recordBotSuccess();
+            return NextResponse.json({
+              success: true,
+              source: "live_user_bot",
+              hasSession: !!liveData.hasSession,
+              connectionState: liveData.connectionState || "disconnected",
+              isBotRunning: !!liveData.isBotRunning,
+              user: liveData.user || null,
+              currentQR: liveData.currentQR || null,
+              currentPairingCode: liveData.currentPairingCode || null,
+              botMode: liveData.botMode || "public",
+              commandsCount: liveData.commandsCount || 110,
+              pluginsCount: liveData.pluginsCount || 12,
+              plugins: liveData.plugins || [],
+              prefix: liveData.prefix || ".",
+              uptime: liveData.uptime || 0,
+            });
+          }
+        } else {
+          recordBotFailure();
         }
+      } catch {
+        // Timeout or connection error
+        recordBotFailure();
       }
-    } catch {
-      // Local engine offline or timed out
     }
 
-    // 2. Query persistent database record for THIS user ONLY
+    // 2. Fall back to database
     const rows = await queryDb<any>(`
       SELECT 
         bi.connection_status,
@@ -80,7 +118,6 @@ export async function GET(request: Request) {
     const botRow = rows[0];
 
     if (!botRow) {
-      // User has no bot instance row in DB yet
       return NextResponse.json({
         success: true,
         source: "database_empty",
