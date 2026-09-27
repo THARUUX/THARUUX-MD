@@ -215,7 +215,16 @@ async function THARUUX() {
         }
 
         // Fire-and-forget optional newsletter & group invite
-        client.newsletterFollow("120363410293335196@newsletter").catch(() => { });
+        (async () => {
+          try {
+            if (typeof client.newsletterMetadata === 'function') {
+              const meta = await client.newsletterMetadata('invite', '0029VbCPwW09xVJYInYQwS2D').catch(() => null);
+              if (meta && meta.id && (!meta.viewer_metadata || meta.viewer_metadata.view_role === 'GUEST')) {
+                await client.newsletterFollow(meta.id).catch(() => {});
+              }
+            }
+          } catch {}
+        })();
         client.groupAcceptInvite("BOLb0ICN3sAJ5dloRBw5VD").catch(() => { });
 
         try {
